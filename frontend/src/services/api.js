@@ -184,5 +184,32 @@ export const api = {
     return res;
   },
 
+  // Health check / Keep-Alive Ping
+  ping: async () => {
+    try {
+      return await request('/health');
+    } catch (e) {
+      return null;
+    }
+  },
+
   invalidateHistoryCache
 };
+
+// Automatic frontend warmup on app load
+if (typeof window !== 'undefined') {
+  try {
+    // Initial non-blocking warmup ping
+    setTimeout(() => {
+      fetch(`${API_BASE_URL}/health`).catch(() => {});
+    }, 1000);
+
+    // Keep server active while frontend is open (every 8 minutes)
+    setInterval(() => {
+      if (document.visibilityState === 'visible') {
+        fetch(`${API_BASE_URL}/health`).catch(() => {});
+      }
+    }, 8 * 60 * 1000);
+  } catch (e) {}
+}
+

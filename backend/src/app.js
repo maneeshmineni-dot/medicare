@@ -89,15 +89,19 @@ if (express) {
   app.use('/api/assistant/chat', aiLimiter);
   app.use('/api/chat/assistant', aiLimiter);
 
-  // Health check
-  app.get('/api/health', (req, res) => {
+  // Health check & Keep-Alive Ping Endpoints
+  const healthHandler = (req, res) => {
     res.json({
       status: 'healthy',
       service: 'PharmaVision AI Backend (Production Secured)',
       timestamp: new Date().toISOString(),
       env: process.env.NODE_ENV || 'development'
     });
-  });
+  };
+
+  app.get('/api/health', healthHandler);
+  app.get('/health', healthHandler);
+  app.get('/ping', (req, res) => res.status(200).send('pong'));
 
   app.use('/api/auth', authRoutes);
   app.use('/api', visionRoutes);
@@ -138,9 +142,14 @@ if (express) {
 
     const parsedUrl = url.parse(req.url, true);
 
-    if (req.method === 'GET' && parsedUrl.pathname === '/api/health') {
+    if (req.method === 'GET' && (parsedUrl.pathname === '/api/health' || parsedUrl.pathname === '/health')) {
       res.writeHead(200, { 'Content-Type': 'application/json' });
       return res.end(JSON.stringify({ status: 'healthy', service: 'PharmaVision AI Backend (Native)' }));
+    }
+
+    if (req.method === 'GET' && parsedUrl.pathname === '/ping') {
+      res.writeHead(200, { 'Content-Type': 'text/plain' });
+      return res.end('pong');
     }
 
     let body = '';
