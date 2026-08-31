@@ -1,69 +1,31 @@
 import React, { useState } from 'react';
-import { useGoogleLogin } from '@react-oauth/google';
-import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { signInWithSupabaseGoogle, isSupabaseConfigured } from '../services/supabaseClient';
 
 export const GoogleSignInButton = ({ text = "Sign in with Google", onError }) => {
-  const { loginWithGoogle } = useAuth();
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
-  const handleGoogleSuccess = async (tokenResponse) => {
+  const handleClick = async () => {
     setLoading(true);
     try {
-      if (tokenResponse?.access_token) {
-        // Fetch user profile from Google UserInfo API using OAuth access_token
-        const userInfoRes = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-          headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
-        });
-        const profile = await userInfoRes.json();
-        
-        if (!profile.email) {
-          throw new Error('Failed to retrieve email from Google profile.');
+      if (isSupabaseConfigured) {
+        // Trigger Supabase Google OAuth
+        await signInWithSupabaseGoogle();
+      } else {
+        const errorMsg = 'Supabase Google Auth is not yet configured. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your frontend environment variables.';
+        if (onError) {
+          onError(errorMsg);
+        } else {
+          alert(errorMsg);
         }
-
-        await loginWithGoogle({
-          email: profile.email,
-          name: profile.name,
-          picture: profile.picture,
-          googleId: profile.sub
-        });
-        navigate('/dashboard');
-      } else if (tokenResponse?.credential) {
-        await loginWithGoogle({ credential: tokenResponse.credential });
-        navigate('/dashboard');
       }
     } catch (err) {
-      console.error('Google Auth Error:', err);
-      if (onError) onError(err.message || 'Google Sign-In failed');
+      console.error('Supabase Google Auth Error:', err);
+      if (onError) {
+        onError(err.message || 'Supabase Google Sign-In failed');
+      }
     } finally {
       setLoading(false);
     }
-  };
-
-  const googleLoginOAuth = useGoogleLogin({
-    onSuccess: handleGoogleSuccess,
-    onError: (error) => {
-      console.warn('Google login error:', error);
-      if (onError) {
-        onError('Google Sign-In failed or popup was closed. Ensure your Google Client ID is authorized in Google Cloud Console.');
-      }
-    }
-  });
-
-  const handleClick = () => {
-    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-    if (!clientId || clientId.trim() === '' || clientId.includes('demo')) {
-      if (onError) {
-        onError('Google Client ID is missing. Please add your VITE_GOOGLE_CLIENT_ID in frontend/.env file.');
-      } else {
-        alert('Please add your VITE_GOOGLE_CLIENT_ID in frontend/.env to enable real Google Account selection.');
-      }
-      return;
-    }
-    
-    // Trigger real Google OAuth popup account selector
-    googleLoginOAuth();
   };
 
   return (
@@ -85,7 +47,7 @@ export const GoogleSignInButton = ({ text = "Sign in with Google", onError }) =>
         color: 'var(--md-sys-color-on-surface)',
         fontSize: '0.9rem',
         fontWeight: '500',
-        cursor: 'pointer',
+        cursor: loading ? 'wait' : 'pointer',
         transition: 'all var(--md-motion-duration) var(--md-motion-easing)',
         boxShadow: 'var(--shadow-elevation-1)'
       }}
@@ -108,7 +70,8 @@ export const GoogleSignInButton = ({ text = "Sign in with Google", onError }) =>
           d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
         />
       </svg>
-      <span>{loading ? 'Connecting Google…' : text}</span>
+      <span>{loading ? 'Connecting to Supabase…' : text}</span>
     </button>
   );
 };
+
