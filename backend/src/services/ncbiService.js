@@ -1,12 +1,16 @@
 const https = require('https');
 const http = require('http');
 
+// High-speed in-memory LRU cache for NCBI PubChem and MeSH biomedical metadata
+const ncbiCache = new Map();
+const MAX_CACHE_ENTRIES = 500;
+
 /**
- * Service to interact with NIH / NCBI Entrez & PubChem Biomedical APIs
+ * Service to interact with NIH / NCBI Entrez & PubChem Biomedical APIs with high-speed in-memory caching
  */
 class NcbiService {
   /**
-   * Helper function to perform HTTP/HTTPS GET requests
+   * Helper function to perform HTTP/HTTPS GET requests with strict 2.5s timeout
    */
   static fetchJson(url) {
     return new Promise((resolve) => {
@@ -27,7 +31,7 @@ class NcbiService {
         });
       });
       req.on('error', () => resolve(null));
-      req.setTimeout(4000, () => {
+      req.setTimeout(2500, () => {
         req.destroy();
         resolve(null);
       });
@@ -35,8 +39,8 @@ class NcbiService {
   }
 
   /**
-   * Searches NCBI PubChem & Entrez E-utilities for drug compound details
-   * @param {string} query - Medication or active ingredient name (e.g., "Ascorbic acid", "Paracetamol", "Amoxicillin")
+   * Searches NCBI PubChem & Entrez E-utilities for drug compound details (with 0ms in-memory cache)
+   * @param {string} query - Medication or active ingredient name
    * @returns {Promise<Object|null>} Biomedical metadata from NCBI / NIH
    */
   static async searchDrugNCBI(query) {
@@ -52,12 +56,18 @@ class NcbiService {
 
     if (!cleanQuery) return null;
 
+    const cacheKey = cleanQuery.toLowerCase();
+    if (ncbiCache.has(cacheKey)) {
+      console.log(`[NCBI Cache Hit] Instant 0ms biomedical data for: ${cleanQuery}`);
+      return ncbiCache.get(cacheKey);
+    }
+
     const ncbiApiKey = process.env.NCBI_API_KEY;
-    const apiKeyParam = ncbiApiKey ? `&api_key=${encodeURIComponent(ncbiApiKey)}` : '';
+    const apiKeyParam = ncbiApiKey ? `&api_key=${ncbiApiKey}` : '';
 
     try {
       // 1. Fetch PubChem Compound Property from NCBI PUG REST API
-      const pubchemPropUrl = `https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/${encodeURIComponent(cleanQuery)}/property/Title,MolecularFormula,MolecularWeight,IUPACName/JSON${apiKeyParam ? '?' + apiKeyParam.substring(1) : ''}`;
+      const pubchemPropUrl = `https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/name/${encodeURIComponent(cleanQuery)}/property/Title,MolecularFormula,MolecularWeight,IUPACName/JSON`;
       const propData = await NcbiService.fetchJson(pubchemPropUrl);
 
       let pubchemInfo = null;
@@ -98,7 +108,7 @@ class NcbiService {
         return null;
       }
 
-      return {
+      const result = {
         ncbiVerified: true,
         database: 'NCBI / NIH PubChem & MeSH',
         searchQuery: cleanQuery,
@@ -111,6 +121,15 @@ class NcbiService {
         pharmacologySummary: description || null,
         ncbiRefUrl: pubchemInfo?.cid ? `https://pubchem.ncbi.nlm.nih.gov/compound/${pubchemInfo.cid}` : `https://www.ncbi.nlm.nih.gov/mesh/?term=${encodeURIComponent(cleanQuery)}`
       };
+
+      // Store in memory cache
+      if (ncbiCache.size >= MAX_CACHE_ENTRIES) {
+        const oldestKey = ncbiCache.keys().next().value;
+        ncbiCache.delete(oldestKey);
+      }
+      ncbiCache.set(cacheKey, result);
+
+      return result;
     } catch (err) {
       console.warn('[NCBI Service Warning]:', err.message);
       return null;

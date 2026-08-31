@@ -5,7 +5,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { api } from '../services/api';
 import {
   Camera, Clock, Pill, ChevronRight, Scan, Package, FileText,
-  ShieldCheck, Sparkles, Activity, Layers, Stethoscope, ArrowRight
+  ShieldCheck, Sparkles, Activity, Layers, Stethoscope, ArrowRight, Bot
 } from 'lucide-react';
 import { getUserMedicalProfile } from '../utils/allergenShield';
 
@@ -144,6 +144,29 @@ export const Dashboard = () => {
           </div>
           <div style={{ marginTop: '20px', color: 'var(--md-sys-color-primary)', fontWeight: 700, fontSize: '0.88rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
             {t('openCabinet')} <ChevronRight size={16} />
+          </div>
+        </div>
+
+        {/* Card 4: AI Health Assistant & Companion */}
+        <div
+          onClick={() => navigate('/assistant')}
+          className="card"
+          style={{ padding: '24px', cursor: 'pointer', background: 'linear-gradient(135deg, rgba(103, 80, 164, 0.06), rgba(147, 51, 234, 0.08))', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', border: '1px solid rgba(103, 80, 164, 0.25)' }}
+        >
+          <div>
+            <div style={{ width: '48px', height: '48px', borderRadius: 'var(--r-full)', background: 'linear-gradient(135deg, var(--md-sys-color-primary), #9333ea)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', marginBottom: '16px', boxShadow: '0 4px 12px rgba(103, 80, 164, 0.3)' }}>
+              <Bot size={24} />
+            </div>
+            <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--md-sys-color-on-surface)', margin: '0 0 8px 0', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              {t('assistant')}
+              <span style={{ fontSize: '0.68rem', fontWeight: 700, padding: '2px 8px', borderRadius: '12px', background: 'rgba(103, 80, 164, 0.15)', color: 'var(--md-sys-color-primary)' }}>NEW</span>
+            </h3>
+            <p style={{ fontSize: '0.86rem', color: 'var(--md-sys-color-on-surface-variant)', lineHeight: 1.5, margin: 0 }}>
+              {t('assistantSubtitle')}
+            </p>
+          </div>
+          <div style={{ marginTop: '20px', color: 'var(--md-sys-color-primary)', fontWeight: 700, fontSize: '0.88rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            {t('openAssistant')} <ChevronRight size={16} />
           </div>
         </div>
 

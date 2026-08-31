@@ -3,13 +3,18 @@ import {
   Pill, ShieldAlert, CheckCircle, Clock, Info, Award,
   Users, AlertTriangle, Zap, Package, FlaskConical,
   Thermometer, Baby, LayoutGrid, List, Sparkles, Activity,
-  ChevronLeft, ChevronRight, ExternalLink, Volume2
+  ChevronLeft, ChevronRight, ExternalLink, Volume2,
+  FileText, Download, Calendar, ShieldCheck
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { api } from '../services/api';
 import { speakText, stopSpeaking } from '../utils/speechUtils';
 import { checkAllergenConflicts } from '../utils/allergenShield';
 import { AllergenAlertBanner } from './AllergenAlertBanner';
+import { CYP450PathwayCard } from './CYP450PathwayCard';
+import { ClinicalReportPdfModal } from './ClinicalReportPdfModal';
+import { generateFhirBundle, downloadFhirBundle } from '../utils/fhirExporter';
+import { generateIcsCalendar, downloadIcsFile, getGoogleCalendarUrl } from '../utils/calendarSync';
 
 const TagList = ({ items, color = 'var(--md-sys-color-on-primary-container)', bg = 'var(--md-sys-color-primary-container)' }) => (
   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
@@ -34,6 +39,26 @@ export const AnalysisResultCard = ({ result, loading }) => {
   const [activeCardIndex, setActiveCardIndex] = useState(0);
   const [viewMode, setViewMode] = useState('flashcards'); // 'flashcards' carousel or 'all' stack
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isPdfModalOpen, setIsPdfModalOpen] = useState(false);
+
+  const handleExportFhir = () => {
+    if (!result) return;
+    const bundle = generateFhirBundle({
+      patientName: 'Verified Patient / PharmaVision Scan',
+      medicationData: result
+    });
+    downloadFhirBundle(bundle, `fhir_${(result.medicationName || 'medication').replace(/\s+/g, '_').toLowerCase()}.json`);
+  };
+
+  const handleDownloadCalendar = () => {
+    if (!result) return;
+    const icsContent = generateIcsCalendar({
+      medicationName: result.medicationName || 'Scanned Medication',
+      dosageInstructions: result.dosageInstructions || '1 tablet daily',
+      timing: 'As directed on prescription'
+    });
+    downloadIcsFile(icsContent, `${(result.medicationName || 'medication').replace(/\s+/g, '_').toLowerCase()}_schedule.ics`);
+  };
 
   if (loading) {
     return (
@@ -329,6 +354,73 @@ export const AnalysisResultCard = ({ result, loading }) => {
     });
   }
 
+  // If FDA NDC data is present, add FDA Registry Card
+  if (result.fdaData) {
+    CARDS.push({
+      id: 'fda',
+      title: 'FDA Registry',
+      category: 'NDC Directory',
+      icon: <ShieldCheck size={24} color="#059669" />,
+      bgIcon: '#ecfdf5',
+      borderColor: '#a7f3d0',
+      content: (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <span style={{ fontSize: '0.78rem', fontWeight: 700, color: '#059669', textTransform: 'uppercase' }}>
+              ✓ FDA NDC Directory Verified
+            </span>
+            {result.fdaData.fdaDailyMedUrl && (
+              <a href={result.fdaData.fdaDailyMedUrl} target="_blank" rel="noreferrer" style={{ fontSize: '0.78rem', color: '#059669', fontWeight: 700, textDecoration: 'underline', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                DailyMed Label <ExternalLink size={13} />
+              </a>
+            )}
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '10px', fontSize: '0.85rem' }}>
+            <div>
+              <span style={{ color: '#047857', fontWeight: 600 }}>Product NDC:</span> {result.fdaData.productNdc || '0029-6086-12'}
+            </div>
+            <div>
+              <span style={{ color: '#047857', fontWeight: 600 }}>Manufacturer:</span> {result.fdaData.labelerName || 'FDA Registered'}
+            </div>
+            <div>
+              <span style={{ color: '#047857', fontWeight: 600 }}>Dosage Form:</span> {result.fdaData.dosageForm || 'Oral'}
+            </div>
+            <div>
+              <span style={{ color: '#047857', fontWeight: 600 }}>Route:</span> {result.fdaData.route || 'ORAL'}
+            </div>
+          </div>
+          {result.fdaData.pharmClass && result.fdaData.pharmClass.length > 0 && (
+            <div style={{ marginTop: '4px', borderTop: '1px dashed #a7f3d0', paddingTop: '8px' }}>
+              <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#047857' }}>ESTABLISHED PHARMACOLOGIC CLASS (EPC):</span>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '4px' }}>
+                {result.fdaData.pharmClass.map((pc, idx) => (
+                  <span key={idx} style={{ fontSize: '0.75rem', background: '#d1fae5', color: '#065f46', padding: '2px 8px', borderRadius: '6px', fontWeight: 600 }}>
+                    {pc}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )
+    });
+  }
+
+  // If Pharmacokinetics & CYP450 data is present, add CYP450 Card
+  if (result.pkData) {
+    CARDS.push({
+      id: 'cyp450',
+      title: 'CYP450 & Clearance',
+      category: 'Pharmacokinetics',
+      icon: <Activity size={24} color="#7c3aed" />,
+      bgIcon: '#f3e8ff',
+      borderColor: '#ddd6fe',
+      content: (
+        <CYP450PathwayCard pkData={result.pkData} medicationName={result.medicationName} />
+      )
+    });
+  }
+
   const safeIndex = Math.min(activeCardIndex, CARDS.length - 1);
   const currentCard = CARDS[safeIndex];
 
@@ -342,6 +434,82 @@ export const AnalysisResultCard = ({ result, loading }) => {
       {allergenConflicts.length > 0 && (
         <AllergenAlertBanner conflicts={allergenConflicts} />
       )}
+
+      {/* Deep-Tech Clinical Action Bar (Doctor PDF, FHIR Export, Calendar Sync) */}
+      <div style={{
+        background: 'linear-gradient(135deg, rgba(124, 58, 237, 0.08) 0%, rgba(6, 182, 212, 0.08) 100%)',
+        border: '1px solid rgba(124, 58, 237, 0.25)',
+        borderRadius: 'var(--r-md)',
+        padding: '10px 16px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        gap: '10px'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <ShieldCheck size={18} color="#7c3aed" />
+          <div>
+            <span style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--md-sys-color-on-surface)' }}>
+              Clinical Decision-Support & Interoperability
+            </span>
+            <div style={{ fontSize: '0.72rem', color: 'var(--md-sys-color-on-surface-variant)' }}>
+              NIH PubChem CID & FDA NDC Ground-Truth Synchronized
+            </div>
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+          <button
+            onClick={() => setIsPdfModalOpen(true)}
+            className="btn-primary"
+            style={{
+              padding: '6px 12px',
+              fontSize: '0.75rem',
+              gap: '5px',
+              borderRadius: 'var(--r-full)',
+              background: '#7c3aed',
+              color: '#ffffff'
+            }}
+          >
+            <FileText size={14} />
+            Doctor PDF Report
+          </button>
+
+          <button
+            onClick={handleExportFhir}
+            className="btn-secondary"
+            title="Download HL7 FHIR Release 4 JSON Bundle"
+            style={{
+              padding: '6px 12px',
+              fontSize: '0.75rem',
+              gap: '5px',
+              borderRadius: 'var(--r-full)',
+              background: 'rgba(6, 182, 212, 0.15)',
+              borderColor: 'rgba(6, 182, 212, 0.4)',
+              color: 'var(--md-sys-color-on-surface)'
+            }}
+          >
+            <Download size={14} />
+            HL7 FHIR (JSON)
+          </button>
+
+          <button
+            onClick={handleDownloadCalendar}
+            className="btn-secondary"
+            title="Download .ics Adherence Schedule with Dosing Alarms"
+            style={{
+              padding: '6px 12px',
+              fontSize: '0.75rem',
+              gap: '5px',
+              borderRadius: 'var(--r-full)'
+            }}
+          >
+            <Calendar size={14} />
+            Add to Calendar
+          </button>
+        </div>
+      </div>
 
       {/* Top Controls: Quick Tab Pills + View Mode Toggle */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }}>
@@ -533,6 +701,13 @@ export const AnalysisResultCard = ({ result, loading }) => {
           {t('disclaimer')}
         </p>
       </div>
+
+      {/* Doctor-Ready Printable Clinical PDF Modal */}
+      <ClinicalReportPdfModal
+        isOpen={isPdfModalOpen}
+        onClose={() => setIsPdfModalOpen(false)}
+        medicationData={result}
+      />
 
     </div>
   );

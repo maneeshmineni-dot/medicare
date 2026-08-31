@@ -86,6 +86,8 @@ if (express) {
   app.use('/api/analyze-prescription', aiLimiter);
   app.use('/api/analyze-dual-audit', aiLimiter);
   app.use('/api/vision/chat', aiLimiter);
+  app.use('/api/assistant/chat', aiLimiter);
+  app.use('/api/chat/assistant', aiLimiter);
 
   // Health check
   app.get('/api/health', (req, res) => {

@@ -2,6 +2,7 @@ import React from 'react';
 import { Sidebar } from './Sidebar';
 import { EmergencyBanner } from './EmergencyBanner';
 import { CookieConsentBanner } from './CookieConsentBanner';
+import { FloatingAssistantWidget } from './FloatingAssistantWidget';
 
 export const AppLayout = ({ children }) => (
   <div className="app-shell">
@@ -11,6 +12,7 @@ export const AppLayout = ({ children }) => (
       <div style={{ flex: 1 }}>
         {children}
       </div>
+      <FloatingAssistantWidget />
       <CookieConsentBanner />
     </main>
   </div>

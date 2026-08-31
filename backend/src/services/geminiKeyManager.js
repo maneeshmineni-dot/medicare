@@ -14,9 +14,12 @@ function getGeminiApiKeys(overrideKey = null) {
     .filter(k => k.length > 0 && k !== 'your_gemini_api_key_here');
 }
 
+// In-memory cache for fastest model & key index to eliminate roundtrip trial-and-error latency
+let cachedWorkingModel = null;
+let cachedWorkingKeyIdx = 0;
+
 /**
- * Executes a Gemini request with automatic Multi-Key Pooling and Multi-Model Failover.
- * If Key 1 hits a 429 (Quota Exceeded / Rate Limit), Key 2 automatically kicks in seamlessly.
+ * Executes a Gemini request with automatic Multi-Key Pooling, Multi-Model Failover, and zero-latency caching.
  */
 async function generateWithFailover({ prompt, parts = [], overrideKey = null, generationConfig = {} }) {
   const keys = getGeminiApiKeys(overrideKey);
@@ -25,26 +28,36 @@ async function generateWithFailover({ prompt, parts = [], overrideKey = null, ge
   }
 
   const customModel = process.env.GEMINI_MODEL ? [process.env.GEMINI_MODEL.trim()] : [];
-  const candidateModels = [
-    ...customModel,
-    'gemini-3.7-flash',
+  const defaultModels = [
     'gemini-3.6-flash',
     'gemini-3.5-flash',
-    'gemini-3.5-flash-lite',
+    'gemini-3.1-flash-lite',
     'gemini-2.5-flash',
-    'gemini-2.5-flash-lite'
+    'gemini-2.0-flash',
+    'gemini-1.5-flash'
   ];
-  // Deduplicate in case customModel matches one of the defaults
+
+  // Prioritize custom model, then cached working model, then standard fast models
+  const candidateModels = [
+    ...customModel,
+    ...(cachedWorkingModel ? [cachedWorkingModel] : []),
+    ...defaultModels
+  ];
   const uniqueModels = [...new Set(candidateModels)];
 
   let lastError = null;
 
-  // Key Pool Loop: Tries Key 1 -> Key 2 -> Key 3...
-  for (let keyIdx = 0; keyIdx < keys.length; keyIdx++) {
+  // Order keys starting from last working key index to avoid cold-start rotation delay
+  const keyIndices = [];
+  const startIdx = (cachedWorkingKeyIdx < keys.length) ? cachedWorkingKeyIdx : 0;
+  for (let i = 0; i < keys.length; i++) {
+    keyIndices.push((startIdx + i) % keys.length);
+  }
+
+  for (const keyIdx of keyIndices) {
     const currentKey = keys[keyIdx];
     const genAI = new GoogleGenerativeAI(currentKey);
 
-    // Model Loop: Tries available candidate models on this key
     for (const modelName of uniqueModels) {
       try {
         const model = genAI.getGenerativeModel({
@@ -55,7 +68,7 @@ async function generateWithFailover({ prompt, parts = [], overrideKey = null, ge
         const contents = parts.length > 0 ? [prompt, ...parts] : prompt;
         const result = await model.generateContent(contents);
         const textResponse = result.response.text();
-        const jsonText = textResponse.replace(/```json/g, '').replace(/```/g, '').trim();
+        const jsonText = textResponse.replace(/`json/g, '').replace(/`/g, '').trim();
 
         let parsedData = null;
         try {
@@ -63,6 +76,10 @@ async function generateWithFailover({ prompt, parts = [], overrideKey = null, ge
         } catch (e) {
           parsedData = textResponse;
         }
+
+        // Cache working configuration for sub-second subsequent scans
+        cachedWorkingModel = modelName;
+        cachedWorkingKeyIdx = keyIdx;
 
         console.log(`[Gemini Multi-Key Success] Request fulfilled with Key #${keyIdx + 1} (${modelName})`);
         return {
@@ -75,14 +92,14 @@ async function generateWithFailover({ prompt, parts = [], overrideKey = null, ge
         console.warn(`[Gemini Failover Alert] Key #${keyIdx + 1} / Model ${modelName} notice: ${err.message}`);
         lastError = err;
 
-        // If rate limit / quota exceeded, immediately rotate to next API key in the pool!
+        // If rate limit / quota exceeded, immediately rotate to next API key in the pool
         if (
           err.message.includes('429') ||
           err.message.includes('quota') ||
           err.message.includes('ResourceExhausted') ||
           err.message.includes('RESOURCE_EXHAUSTED')
         ) {
-          console.log(`[Key Pool Rotation] Key #${keyIdx + 1} quota limit reached. Automatically rotating to Key #${keyIdx + 2}...`);
+          console.log(`[Key Pool Rotation] Key #${keyIdx + 1} quota limit reached. Rotating to next key...`);
           break; // Break model loop, jump immediately to next key
         }
       }

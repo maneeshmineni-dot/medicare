@@ -4,10 +4,13 @@ import {
   Zap, Calendar, User, Building2, Check, ArrowRight, Sparkles,
   Info, ChevronDown, ChevronUp, Sun, Moon, Sunrise, Utensils,
   Activity, Heart, Dumbbell, AlertOctagon, Layers,
-  ChevronLeft, ChevronRight, LayoutGrid, List, Award, FileDown
+  ChevronLeft, ChevronRight, LayoutGrid, List, Award, FileDown,
+  Download, ShieldCheck, Printer
 } from 'lucide-react';
 import { api } from '../services/api';
 import { generateDualAuditPDF } from '../utils/clinicalPdfExporter';
+import { ClinicalReportPdfModal } from './ClinicalReportPdfModal';
+import { generateFhirBundle, downloadFhirBundle } from '../utils/fhirExporter';
 
 export const DualAuditResultCard = ({ result, loading, onSavedToCabinet, imageThumbnail }) => {
   const [activeCardIndex, setActiveCardIndex] = useState(0);
@@ -16,6 +19,16 @@ export const DualAuditResultCard = ({ result, loading, onSavedToCabinet, imageTh
   const [saving, setSaving] = useState(false);
   const [savedSuccess, setSavedSuccess] = useState('');
   const [saveError, setSaveError] = useState('');
+  const [isPdfModalOpen, setIsPdfModalOpen] = useState(false);
+
+  const handleExportFhir = () => {
+    if (!result) return;
+    const bundle = generateFhirBundle({
+      patientName: 'Clinical Dual-Audit Patient',
+      dualAuditData: result
+    });
+    downloadFhirBundle(bundle, `fhir_dual_audit_${Date.now()}.json`);
+  };
 
   React.useEffect(() => {
     if (result?.medicines && Array.isArray(result.medicines)) {
@@ -432,6 +445,67 @@ export const DualAuditResultCard = ({ result, loading, onSavedToCabinet, imageTh
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
 
+      {/* Deep-Tech Clinical Action Bar (Doctor PDF, FHIR Export) */}
+      <div style={{
+        background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(124, 58, 237, 0.08) 100%)',
+        border: '1px solid rgba(16, 185, 129, 0.3)',
+        borderRadius: 'var(--r-md)',
+        padding: '12px 18px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        flexWrap: 'wrap',
+        gap: '12px'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <ShieldCheck size={20} color="#10b981" />
+          <div>
+            <span style={{ fontSize: '0.88rem', fontWeight: 700, color: 'var(--md-sys-color-on-surface)' }}>
+              Clinical Dual-Audit Interoperability
+            </span>
+            <div style={{ fontSize: '0.74rem', color: 'var(--md-sys-color-on-surface-variant)' }}>
+              HL7 FHIR R4 Ready • Verified Organ Biomarker Cross-Check
+            </div>
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <button
+            onClick={() => setIsPdfModalOpen(true)}
+            className="btn-primary"
+            style={{
+              padding: '6px 14px',
+              fontSize: '0.78rem',
+              gap: '6px',
+              borderRadius: 'var(--r-full)',
+              background: '#059669',
+              color: '#ffffff'
+            }}
+          >
+            <FileText size={14} />
+            Print Doctor Audit PDF
+          </button>
+
+          <button
+            onClick={handleExportFhir}
+            className="btn-secondary"
+            title="Download HL7 FHIR Release 4 JSON Bundle"
+            style={{
+              padding: '6px 14px',
+              fontSize: '0.78rem',
+              gap: '6px',
+              borderRadius: 'var(--r-full)',
+              background: 'rgba(6, 182, 212, 0.15)',
+              borderColor: 'rgba(6, 182, 212, 0.4)',
+              color: 'var(--md-sys-color-on-surface)'
+            }}
+          >
+            <Download size={14} />
+            Export HL7 FHIR (JSON)
+          </button>
+        </div>
+      </div>
+
       {/* Top Controls: Quick Tab Pills + View Mode Toggle */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }}>
         <div style={{ display: 'flex', gap: '6px', overflowX: 'auto', paddingBottom: '4px', flex: 1 }}>
@@ -566,6 +640,13 @@ export const DualAuditResultCard = ({ result, loading, onSavedToCabinet, imageTh
           <strong>Clinical Disclaimer:</strong> Dual consultation audits and organ contraindication checks are generated for patient education and awareness. Always consult your attending physician before initiating or modifying any medication regimen.
         </span>
       </div>
+
+      {/* Doctor-Ready Printable Clinical PDF Modal */}
+      <ClinicalReportPdfModal
+        isOpen={isPdfModalOpen}
+        onClose={() => setIsPdfModalOpen(false)}
+        dualAuditData={result}
+      />
 
     </div>
   );

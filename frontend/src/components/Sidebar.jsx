@@ -5,7 +5,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { ThemeToggle } from './ThemeToggle';
 import { LanguageSelector } from './LanguageSelector';
 import {
-  LayoutDashboard, Camera, History, User, LogOut, Pill, FileText, Package
+  LayoutDashboard, Camera, History, User, LogOut, Pill, FileText, Package, Bot
 } from 'lucide-react';
 
 export const Sidebar = () => {
@@ -15,6 +15,7 @@ export const Sidebar = () => {
 
   const NAV_ITEMS = [
     { to: '/dashboard',       icon: LayoutDashboard, label: t('home') },
+    { to: '/assistant',       icon: Bot,             label: t('assistant') },
     { to: '/scanner',         icon: Camera,          label: t('scanner') },
     { to: '/report-analyzer', icon: FileText,        label: t('reportsRx') },
     { to: '/cabinet',         icon: Package,         label: t('cabinet') },

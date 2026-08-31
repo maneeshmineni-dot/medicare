@@ -137,7 +137,28 @@ export const translations = {
     duration: 'Duration',
     timing: 'Timing',
     saveToCabinet: 'Save ({count}) to Cabinet',
-    selectedOf: 'Selected: {x} / {y}'
+    selectedOf: 'Selected: {x} / {y}',
+
+    // AI Health Assistant & Companion
+    assistant: 'AI Health Assistant',
+    assistantSubtitle: 'Personal clinical pharmacology companion with full context of your medicine cabinet & allergies.',
+    activeMedsCount: '{count} Cabinet Meds',
+    allergensCount: '{count} Allergens Shielded',
+    conditionsCount: '{count} Conditions Tracked',
+    askAssistantPlaceholder: 'Ask anything about your medications, safety interactions, side effects, or meal rules…',
+    quickPromptsTitle: 'Suggested Clinical Questions',
+    promptInteractions: '🔍 Check interactions among all my cabinet medicines',
+    promptSchedule: '⏰ What is my daily medicine routine and meal timing?',
+    promptAllergies: '🛡️ Are all my current medications safe with my recorded allergies?',
+    promptFoods: '🍏 Which foods, juices, or supplements should I avoid with my pills?',
+    promptMissedDose: '❓ What should I do if I miss a scheduled dose?',
+    clearChat: 'Clear Conversation',
+    exportTranscript: 'Export Consultation',
+    listening: 'Listening… speak now',
+    voiceInput: 'Voice Input (Mic)',
+    readAloud: 'Read Aloud',
+    stopAudio: 'Stop Audio',
+    openAssistant: 'Open AI Health Assistant'
   },
 
   hi: {
@@ -274,7 +295,28 @@ export const translations = {
     duration: 'अवधि',
     timing: 'समय',
     saveToCabinet: 'अलमारी में सहेजें ({count})',
-    selectedOf: 'चयनित: {x} / {y}'
+    selectedOf: 'चयनित: {x} / {y}',
+
+    // AI Health Assistant & Companion
+    assistant: 'एआई स्वास्थ्य सहायक',
+    assistantSubtitle: 'आपकी दवा अलमारी और एलर्जी के पूर्ण संदर्भ के साथ व्यक्तिगत स्वास्थ्य साथी।',
+    activeMedsCount: '{count} दवाएं सक्रिय',
+    allergensCount: '{count} एलर्जी सुरक्षित',
+    conditionsCount: '{count} स्थितियां ट्रैक की गईं',
+    askAssistantPlaceholder: 'अपनी दवाओं, इंटरैक्शन, साइड इफेक्ट्स या भोजन के नियमों के बारे में कुछ भी पूछें…',
+    quickPromptsTitle: 'सुझाए गए नैदानिक प्रश्न',
+    promptInteractions: '🔍 मेरी सभी दवाओं के बीच संभावित परस्पर क्रिया (interactions) जांचें',
+    promptSchedule: '⏰ मेरा दैनिक दवा शेड्यूल और भोजन के नियम क्या हैं?',
+    promptAllergies: '🛡️ क्या मेरी सभी दवाएं मेरी दर्ज की गई एलर्जी के साथ सुरक्षित हैं?',
+    promptFoods: '🍏 मुझे अपनी दवाओं के साथ किन खाद्य पदार्थों या रसों से बचना चाहिए?',
+    promptMissedDose: '❓ यदि मेरी कोई खुराक छूट जाए तो मुझे क्या करना चाहिए?',
+    clearChat: 'बातचीत साफ़ करें',
+    exportTranscript: 'परामर्श डाउनलोड करें',
+    listening: 'सुन रहा हूँ... बोलिए',
+    voiceInput: 'आवाज़ से पूछें (माइक)',
+    readAloud: 'पढ़कर सुनाएं',
+    stopAudio: 'ऑडियो रोकें',
+    openAssistant: 'एआई स्वास्थ्य सहायक खोलें'
   },
 
   te: {
@@ -411,7 +453,28 @@ export const translations = {
     duration: 'వ్యవధి',
     timing: 'సమయం',
     saveToCabinet: 'క్యాబినెట్‌లో భద్రపరచండి ({count})',
-    selectedOf: 'ఎంపికచేసినవి: {x} / {y}'
+    selectedOf: 'ఎంపికచేసినవి: {x} / {y}',
+
+    // AI Health Assistant & Companion
+    assistant: 'AI ఆరోగ్య సహాయకుడు',
+    assistantSubtitle: 'మీ మందుల క్యాబినెట్ & అలెర్జీల పూర్తి సమాచారంతో వ్యక్తిగత ఆరోగ్య సహాయకుడు.',
+    activeMedsCount: '{count} మందులు సక్రియం',
+    allergensCount: '{count} అలెర్జీలు రక్షణలో',
+    conditionsCount: '{count} ఆరోగ్య పరిస్థితులు',
+    askAssistantPlaceholder: 'మీ మందులు, పరస్పర చర్యలు, దుష్ప్రభావాలు లేదా ఆహార నియమాల గురించి ఏదైనా అడగండి…',
+    quickPromptsTitle: 'సూచించిన ప్రశ్నలు',
+    promptInteractions: '🔍 నా అన్ని మందుల మధ్య పరస్పర చర్యలను (interactions) తనిఖీ చేయండి',
+    promptSchedule: '⏰ నా రోజువారీ మందుల షెడ్యూల్ & ఆహార సమయాలు ఏమిటి?',
+    promptAllergies: '🛡️ నా నమోదు చేయబడిన అలెర్జీలతో నా ప్రస్తుత మందులన్నీ సురక్షితమేనా?',
+    promptFoods: '🍏 నా మందులతో నేను ఏ ఆహారాలు, రసాలు లేదా సప్లిమెంట్లను నివారించాలి?',
+    promptMissedDose: '❓ నేను షెడ్యూల్ చేసిన మోతాదును మిస్ అయితే ఏమి చేయాలి?',
+    clearChat: 'చర్చను క్లియర్ చేయండి',
+    exportTranscript: 'కన్సల్టేషన్ డౌన్‌లోడ్ చేయండి',
+    listening: 'వింటున్నాను... మాట్లాడండి',
+    voiceInput: 'వాయిస్ ఇన్‌పుట్ (మైక్)',
+    readAloud: 'చదివి వినిపించండి',
+    stopAudio: 'ఆడియో ఆపండి',
+    openAssistant: 'AI ఆరోగ్య సహాయకుడిని తెరవండి'
   }
 };
 

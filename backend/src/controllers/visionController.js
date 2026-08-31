@@ -9,6 +9,8 @@ try {
 
 const ScanHistory = require('../models/ScanHistory');
 const NcbiService = require('../services/ncbiService');
+const FdaService = require('../services/fdaService');
+const PharmacokineticsService = require('../services/pharmacokineticsService');
 
 const LANGUAGE_INSTRUCTIONS = {
   en: 'Respond in clear, professional English.',
@@ -137,17 +139,39 @@ async function analyzeMedicine(req, res, next) {
 
     // NCBI / NIH PubChem Biomedical Verification & Enrichment
     try {
-      const ncbiQuery = (analysisResult.activeIngredients && analysisResult.activeIngredients[0])
+      const primaryQuery = (analysisResult.activeIngredients && analysisResult.activeIngredients[0])
         ? analysisResult.activeIngredients[0]
         : analysisResult.medicationName;
 
-      const ncbiData = await NcbiService.searchDrugNCBI(ncbiQuery);
+      const ncbiData = await NcbiService.searchDrugNCBI(primaryQuery);
       if (ncbiData) {
         analysisResult.ncbiData = ncbiData;
-        console.log(`[NCBI Drug Lookup Success] Enriched biomedical data for: ${ncbiQuery}`);
+        console.log(`[NCBI Drug Lookup Success] Enriched biomedical data for: ${primaryQuery}`);
       }
-    } catch (ncbiErr) {
-      console.warn('[NCBI Lookup Note]:', ncbiErr.message);
+
+      // U.S. FDA National Drug Code (NDC) & DailyMed Lookup
+      const fdaData = await FdaService.searchFdaNdc(analysisResult.medicationName || primaryQuery);
+      if (fdaData) {
+        analysisResult.fdaData = fdaData;
+        console.log(`[FDA NDC Lookup Success] Enriched FDA labeler & NDC: ${fdaData.productNdc || fdaData.brandName}`);
+      }
+
+      // Deterministic Pharmacokinetics & CYP450 Metabolic Pathway Modeling
+      const pkProfile = PharmacokineticsService.findRecord(primaryQuery || analysisResult.medicationName);
+      if (pkProfile) {
+        const plasmaCurve = PharmacokineticsService.generatePlasmaCurve(
+          pkProfile.halfLifeHours,
+          pkProfile.tmaxHours,
+          pkProfile.cmaxTypical
+        );
+        analysisResult.pkData = {
+          ...pkProfile,
+          plasmaCurve
+        };
+        console.log(`[PK & CYP450 Success] Generated metabolic model for: ${pkProfile.name}`);
+      }
+    } catch (enrichErr) {
+      console.warn('[Enrichment Note]:', enrichErr.message);
     }
 
     // Save valid base64 image data URI string for scan history thumbnail
@@ -258,7 +282,45 @@ Patient Question: "${message}"`;
   }
 }
 
+async function lookupNdc(req, res, next) {
+  try {
+    const query = req.query.query || req.query.ndc || req.query.name;
+    if (!query) {
+      return res.status(400).json({ success: false, message: 'query or ndc parameter required' });
+    }
+    const fdaData = await FdaService.searchFdaNdc(query);
+    return res.json({
+      success: true,
+      data: fdaData
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function analyzeCyp450(req, res, next) {
+  try {
+    const drugsParam = req.query.drugs || req.body.drugs;
+    let drugList = [];
+    if (typeof drugsParam === 'string') {
+      drugList = drugsParam.split(',').map(d => d.trim()).filter(Boolean);
+    } else if (Array.isArray(drugsParam)) {
+      drugList = drugsParam;
+    }
+
+    const report = PharmacokineticsService.analyzeInteractions(drugList);
+    return res.json({
+      success: true,
+      data: report
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = {
   analyzeMedicine,
-  chatWithMedicineAI
+  chatWithMedicineAI,
+  lookupNdc,
+  analyzeCyp450
 };

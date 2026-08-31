@@ -124,6 +124,18 @@ export const api = {
     body: JSON.stringify({ message, medicineContext, targetLanguage: getActiveLanguage() })
   }),
 
+  // Holistic Patient Health & Multi-Medication Assistant Chat API
+  chatWithAssistant: ({ message, conversationHistory = [], patientProfile = {}, cabinetMedicines = [] }) => request('/assistant/chat', {
+    method: 'POST',
+    body: JSON.stringify({
+      message,
+      conversationHistory,
+      patientProfile,
+      cabinetMedicines,
+      targetLanguage: getActiveLanguage()
+    })
+  }),
+
   // Instant SWR Cached History API (0ms Instant Load)
   getHistory: async (forceRefresh = false) => {
     const now = Date.now();

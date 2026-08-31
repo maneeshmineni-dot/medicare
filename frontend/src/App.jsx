@@ -10,6 +10,7 @@ import { Register } from './pages/Register';
 
 // App pages
 import { Dashboard }      from './pages/Dashboard';
+import { Assistant }      from './pages/Assistant';
 import { Scanner }        from './pages/Scanner';
 import { ReportAnalyzer } from './pages/ReportAnalyzer';
 import { Cabinet }        from './pages/Cabinet';
@@ -50,6 +51,7 @@ export function App() {
 
             {/* Protected — with sidebar */}
             <Route path="/dashboard"       element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+            <Route path="/assistant"       element={<ProtectedRoute><Assistant /></ProtectedRoute>} />
             <Route path="/scanner"         element={<ProtectedRoute><Scanner /></ProtectedRoute>} />
             <Route path="/report-analyzer" element={<ProtectedRoute><ReportAnalyzer /></ProtectedRoute>} />
             <Route path="/cabinet"         element={<ProtectedRoute><Cabinet /></ProtectedRoute>} />
