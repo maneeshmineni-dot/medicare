@@ -7,10 +7,10 @@ const PORT = process.env.PORT || 5000;
 async function startServer() {
   await connectDB();
   
-  app.listen(PORT, () => {
+  app.listen(PORT, '0.0.0.0', () => {
     console.log(`====================================================`);
-    console.log(`  PharmaVision AI Server running on port ${PORT}`);
-    console.log(`  Health check: http://localhost:${PORT}/api/health`);
+    console.log(`  PharmaVision AI Server running on 0.0.0.0:${PORT}`);
+    console.log(`  Health check: http://0.0.0.0:${PORT}/api/health`);
     console.log(`====================================================`);
 
     // Start Render anti-sleep keep alive service
