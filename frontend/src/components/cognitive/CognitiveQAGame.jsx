@@ -253,13 +253,13 @@ export const CognitiveQAGame = ({ onBack }) => {
 
               if (isAnswered) {
                 if (isCorrect) {
-                  btnBg = '#ecfdf5';
+                  btnBg = 'rgba(16, 185, 129, 0.15)';
                   border = '2px solid #10b981';
-                  textColor = '#065f46';
+                  textColor = 'var(--emerald)';
                 } else if (isSelected && !isCorrect) {
-                  btnBg = '#fef2f2';
+                  btnBg = 'rgba(239, 68, 68, 0.15)';
                   border = '2px solid #ef4444';
-                  textColor = '#991b1b';
+                  textColor = 'var(--rose)';
                 }
               }
 

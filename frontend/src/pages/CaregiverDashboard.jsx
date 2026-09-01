@@ -70,31 +70,32 @@ export const CaregiverDashboard = () => {
             display: 'flex',
             alignItems: 'center',
             gap: '6px',
-            padding: '6px 12px',
+            padding: '6px 14px',
             borderRadius: '999px',
             fontSize: '0.78rem',
             fontWeight: 800,
-            background: isOnline ? '#ecfdf5' : '#fef2f2',
-            color: isOnline ? '#065f46' : '#991b1b',
-            border: isOnline ? '1px solid #10b981' : '1px solid #ef4444'
+            background: isOnline ? 'rgba(16, 185, 129, 0.15)' : 'rgba(239, 68, 68, 0.15)',
+            color: isOnline ? 'var(--emerald)' : 'var(--rose)',
+            border: isOnline ? '1px solid rgba(16, 185, 129, 0.3)' : '1px solid rgba(239, 68, 68, 0.3)'
           }}>
             {isOnline ? <Wifi size={14} /> : <WifiOff size={14} />}
             {isOnline ? 'Cloud Synced' : 'Offline Mode'}
           </div>
 
           {/* Timeframe Toggle */}
-          <div style={{ display: 'flex', background: 'var(--md-sys-color-surface-container)', padding: '4px', borderRadius: '14px' }}>
+          <div style={{ display: 'flex', background: 'var(--md-sys-color-surface-container-high)', padding: '4px', borderRadius: '14px', border: '1px solid var(--border)' }}>
             <button
               onClick={() => setTimeframe(7)}
               style={{
                 padding: '6px 14px',
                 borderRadius: '10px',
                 border: 'none',
-                background: timeframe === 7 ? 'var(--md-sys-color-surface)' : 'transparent',
-                color: timeframe === 7 ? 'var(--md-sys-color-on-surface)' : 'var(--md-sys-color-on-surface-variant)',
+                background: timeframe === 7 ? 'var(--md-sys-color-primary-container)' : 'transparent',
+                color: timeframe === 7 ? 'var(--md-sys-color-on-primary-container)' : 'var(--md-sys-color-on-surface-variant)',
                 fontWeight: 700,
                 fontSize: '0.82rem',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                transition: 'all 0.2s ease'
               }}
             >
               7 Days
@@ -105,11 +106,12 @@ export const CaregiverDashboard = () => {
                 padding: '6px 14px',
                 borderRadius: '10px',
                 border: 'none',
-                background: timeframe === 30 ? 'var(--md-sys-color-surface)' : 'transparent',
-                color: timeframe === 30 ? 'var(--md-sys-color-on-surface)' : 'var(--md-sys-color-on-surface-variant)',
+                background: timeframe === 30 ? 'var(--md-sys-color-primary-container)' : 'transparent',
+                color: timeframe === 30 ? 'var(--md-sys-color-on-primary-container)' : 'var(--md-sys-color-on-surface-variant)',
                 fontWeight: 700,
                 fontSize: '0.82rem',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                transition: 'all 0.2s ease'
               }}
             >
               30 Days
@@ -133,11 +135,11 @@ export const CaregiverDashboard = () => {
         <div className="stat-card">
           <div className="stat-header">
             <span className="stat-label">Adherence Rate</span>
-            <div className="stat-icon" style={{ background: '#ecfdf5', color: '#10b981' }}>
+            <div className="stat-icon" style={{ background: 'var(--md-sys-color-success-container)', color: 'var(--emerald)' }}>
               <Pill size={18} />
             </div>
           </div>
-          <div className="stat-value" style={{ color: '#10b981' }}>
+          <div className="stat-value" style={{ color: 'var(--emerald)' }}>
             {metrics.adherenceRate}%
           </div>
           <div className="stat-trend trend-up">
@@ -148,11 +150,11 @@ export const CaregiverDashboard = () => {
         <div className="stat-card">
           <div className="stat-header">
             <span className="stat-label">Cognitive Index</span>
-            <div className="stat-icon" style={{ background: '#ede9fe', color: '#7c3aed' }}>
+            <div className="stat-icon" style={{ background: 'var(--md-sys-color-primary-container)', color: 'var(--md-sys-color-primary)' }}>
               <Trophy size={18} />
             </div>
           </div>
-          <div className="stat-value" style={{ color: '#7c3aed' }}>
+          <div className="stat-value" style={{ color: 'var(--md-sys-color-primary)' }}>
             {metrics.cognitiveHealthScore} / 100
           </div>
           <div className="stat-trend trend-up">
@@ -163,7 +165,7 @@ export const CaregiverDashboard = () => {
         <div className="stat-card">
           <div className="stat-header">
             <span className="stat-label">Avg Recall Hesitation</span>
-            <div className="stat-icon" style={{ background: '#fdf2f8', color: '#ec4899' }}>
+            <div className="stat-icon" style={{ background: 'var(--md-sys-color-tertiary-container)', color: 'var(--md-sys-color-tertiary)' }}>
               <Clock size={18} />
             </div>
           </div>

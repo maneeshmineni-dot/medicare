@@ -129,13 +129,14 @@ export const VoiceTherapistRoom = () => {
             style={{
               padding: '8px 16px',
               borderRadius: 'var(--r-full)',
-              border: selectedLang === lang.code ? '2px solid #8b5cf6' : '1px solid var(--border)',
-              background: selectedLang === lang.code ? '#ede9fe' : 'var(--md-sys-color-surface)',
-              color: selectedLang === lang.code ? '#6d28d9' : 'var(--md-sys-color-on-surface)',
+              border: selectedLang === lang.code ? '2px solid var(--md-sys-color-primary)' : '1px solid var(--border)',
+              background: selectedLang === lang.code ? 'var(--md-sys-color-primary-container)' : 'var(--md-sys-color-surface)',
+              color: selectedLang === lang.code ? 'var(--md-sys-color-on-primary-container)' : 'var(--md-sys-color-on-surface)',
               fontSize: '0.85rem',
               fontWeight: 700,
               cursor: 'pointer',
-              whiteSpace: 'nowrap'
+              whiteSpace: 'nowrap',
+              transition: 'all 0.2s ease'
             }}
           >
             {lang.flag} {lang.label}
@@ -152,15 +153,16 @@ export const VoiceTherapistRoom = () => {
             style={{
               padding: '18px',
               borderRadius: '20px',
-              border: activeMode === mode.id ? '2px solid #ec4899' : '1px solid var(--border)',
-              background: activeMode === mode.id ? 'rgba(236, 72, 153, 0.08)' : 'var(--md-sys-color-surface-container)',
+              border: activeMode === mode.id ? '2px solid var(--md-sys-color-tertiary)' : '1px solid var(--border)',
+              background: activeMode === mode.id ? 'var(--md-sys-color-tertiary-container)' : 'var(--md-sys-color-surface-container)',
+              color: activeMode === mode.id ? 'var(--md-sys-color-on-tertiary-container)' : 'inherit',
               cursor: 'pointer',
               transition: 'all 0.25s ease'
             }}
           >
             <div style={{ fontSize: '1.8rem', marginBottom: '8px' }}>{mode.icon}</div>
             <h4 style={{ margin: '0 0 4px', fontSize: '0.98rem', fontWeight: 800 }}>{mode.label}</h4>
-            <p style={{ margin: 0, fontSize: '0.78rem', color: 'var(--md-sys-color-on-surface-variant)', lineHeight: 1.4 }}>
+            <p style={{ margin: 0, fontSize: '0.78rem', color: activeMode === mode.id ? 'var(--md-sys-color-on-tertiary-container)' : 'var(--md-sys-color-on-surface-variant)', lineHeight: 1.4, opacity: 0.9 }}>
               {mode.desc}
             </p>
           </div>
@@ -171,8 +173,8 @@ export const VoiceTherapistRoom = () => {
       <div className="card" style={{ padding: '32px', borderRadius: '28px', border: '1px solid var(--border)', position: 'relative' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '18px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <Sparkles size={20} color="#ec4899" />
-            <span style={{ fontSize: '0.85rem', fontWeight: 800, textTransform: 'uppercase', color: '#ec4899' }}>
+            <Sparkles size={20} color="var(--md-sys-color-tertiary)" />
+            <span style={{ fontSize: '0.85rem', fontWeight: 800, textTransform: 'uppercase', color: 'var(--md-sys-color-tertiary)' }}>
               Companion Voice
             </span>
           </div>
@@ -184,9 +186,9 @@ export const VoiceTherapistRoom = () => {
                 style={{
                   padding: '6px 14px',
                   borderRadius: 'var(--r-full)',
-                  border: 'none',
-                  background: '#fef2f2',
-                  color: '#ef4444',
+                  border: '1px solid rgba(239, 68, 68, 0.3)',
+                  background: 'rgba(239, 68, 68, 0.15)',
+                  color: 'var(--rose)',
                   fontSize: '0.82rem',
                   fontWeight: 700,
                   display: 'flex',
@@ -203,9 +205,9 @@ export const VoiceTherapistRoom = () => {
                 style={{
                   padding: '6px 14px',
                   borderRadius: 'var(--r-full)',
-                  border: 'none',
-                  background: '#ecfdf5',
-                  color: '#10b981',
+                  border: '1px solid rgba(16, 185, 129, 0.3)',
+                  background: 'rgba(16, 185, 129, 0.15)',
+                  color: 'var(--emerald)',
                   fontSize: '0.82rem',
                   fontWeight: 700,
                   display: 'flex',

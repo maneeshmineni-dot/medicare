@@ -28,8 +28,8 @@ export const MemoryAssistancePage = () => {
             display: 'inline-flex',
             alignItems: 'center',
             gap: '8px',
-            background: 'rgba(139, 92, 246, 0.2)',
-            color: '#7c3aed',
+            background: 'var(--md-sys-color-primary-container)',
+            color: 'var(--md-sys-color-on-primary-container)',
             padding: '6px 14px',
             borderRadius: '999px',
             fontSize: '0.8rem',
@@ -56,7 +56,7 @@ export const MemoryAssistancePage = () => {
                 display: 'flex',
                 alignItems: 'center',
                 gap: '8px',
-                background: 'linear-gradient(135deg, #8b5cf6, #6d28d9)',
+                background: 'linear-gradient(135deg, var(--md-sys-color-primary), #6d28d9)',
                 border: 'none',
                 boxShadow: '0 6px 20px rgba(139, 92, 246, 0.4)'
               }}
@@ -74,7 +74,7 @@ export const MemoryAssistancePage = () => {
                 gap: '8px'
               }}
             >
-              <Sparkles size={18} color="#8b5cf6" /> Daily Orientation Quiz
+              <Sparkles size={18} color="var(--md-sys-color-primary)" /> Daily Orientation Quiz
             </button>
           </div>
         </div>
@@ -85,7 +85,7 @@ export const MemoryAssistancePage = () => {
         <div className="stat-card">
           <div className="stat-header">
             <span className="stat-label">Cognitive Index</span>
-            <div className="stat-icon" style={{ background: '#ede9fe', color: '#7c3aed' }}>
+            <div className="stat-icon" style={{ background: 'var(--md-sys-color-primary-container)', color: 'var(--md-sys-color-primary)' }}>
               <Trophy size={18} />
             </div>
           </div>
@@ -98,7 +98,7 @@ export const MemoryAssistancePage = () => {
         <div className="stat-card">
           <div className="stat-header">
             <span className="stat-label">Recall Latency</span>
-            <div className="stat-icon" style={{ background: '#ecfdf5', color: '#10b981' }}>
+            <div className="stat-icon" style={{ background: 'var(--md-sys-color-success-container)', color: 'var(--emerald)' }}>
               <Clock size={18} />
             </div>
           </div>
@@ -111,14 +111,14 @@ export const MemoryAssistancePage = () => {
         <div className="stat-card">
           <div className="stat-header">
             <span className="stat-label">Caregiver Telemetry</span>
-            <div className="stat-icon" style={{ background: '#fdf2f8', color: '#ec4899' }}>
+            <div className="stat-icon" style={{ background: 'var(--md-sys-color-tertiary-container)', color: 'var(--md-sys-color-tertiary)' }}>
               <Heart size={18} />
             </div>
           </div>
           <div className="stat-value">Active</div>
           <div
             onClick={() => navigate('/caregiver')}
-            style={{ fontSize: '0.82rem', color: '#8b5cf6', fontWeight: 700, cursor: 'pointer', marginTop: '6px' }}
+            style={{ fontSize: '0.82rem', color: 'var(--md-sys-color-primary)', fontWeight: 700, cursor: 'pointer', marginTop: '6px' }}
           >
             View Dashboard →
           </div>

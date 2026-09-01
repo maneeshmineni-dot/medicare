@@ -93,7 +93,7 @@ export const AddFamilyQuestionModal = ({ isOpen, onClose, onQuestionAdded }) => 
         </div>
 
         {error && (
-          <div style={{ background: '#fef2f2', border: '1px solid #f87171', color: '#991b1b', padding: '10px 14px', borderRadius: '12px', marginBottom: '16px', fontSize: '0.85rem' }}>
+          <div style={{ background: 'rgba(239, 68, 68, 0.15)', border: '1px solid rgba(239, 68, 68, 0.3)', color: 'var(--rose)', padding: '10px 14px', borderRadius: '12px', marginBottom: '16px', fontSize: '0.85rem' }}>
             {error}
           </div>
         )}

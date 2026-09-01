@@ -67,8 +67,8 @@ export const FullScreenReminderModal = () => {
 
         <span style={{
           display: 'inline-block',
-          background: '#ede9fe',
-          color: '#6d28d9',
+          background: 'var(--md-sys-color-primary-container)',
+          color: 'var(--md-sys-color-on-primary-container)',
           fontWeight: 800,
           fontSize: '0.85rem',
           padding: '6px 16px',

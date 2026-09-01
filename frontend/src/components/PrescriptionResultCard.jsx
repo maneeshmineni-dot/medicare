@@ -217,17 +217,17 @@ export const PrescriptionResultCard = ({ result, loading, onSavedToCabinet, imag
 
                   {/* 1-0-1 Schedule Badges */}
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '8px', padding: '8px 12px', background: 'var(--md-sys-color-surface-container-low)', borderRadius: 'var(--r-sm)' }}>
-                    <span style={{ fontSize: '0.78rem', padding: '3px 8px', background: schedule.morning > 0 ? '#fef3c7' : '#f3f4f6', color: schedule.morning > 0 ? '#92400e' : '#9ca3af', borderRadius: 'var(--r-full)', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                    <span style={{ fontSize: '0.78rem', padding: '4px 10px', background: schedule.morning > 0 ? 'rgba(245, 158, 11, 0.18)' : 'var(--md-sys-color-surface-container-high)', color: schedule.morning > 0 ? 'var(--amber)' : 'var(--md-sys-color-on-surface-variant)', borderRadius: 'var(--r-full)', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
                       <Sunrise size={12} /> Morning: {schedule.morning ?? '—'}
                     </span>
-                    <span style={{ fontSize: '0.78rem', padding: '3px 8px', background: schedule.afternoon > 0 ? '#ffedd5' : '#f3f4f6', color: schedule.afternoon > 0 ? '#c2410c' : '#9ca3af', borderRadius: 'var(--r-full)', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                    <span style={{ fontSize: '0.78rem', padding: '4px 10px', background: schedule.afternoon > 0 ? 'rgba(249, 115, 22, 0.18)' : 'var(--md-sys-color-surface-container-high)', color: schedule.afternoon > 0 ? '#fb923c' : 'var(--md-sys-color-on-surface-variant)', borderRadius: 'var(--r-full)', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
                       <Sun size={12} /> Afternoon: {schedule.afternoon ?? '—'}
                     </span>
-                    <span style={{ fontSize: '0.78rem', padding: '3px 8px', background: schedule.night > 0 ? '#ede9fe' : '#f3f4f6', color: schedule.night > 0 ? '#6d28d9' : '#9ca3af', borderRadius: 'var(--r-full)', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                    <span style={{ fontSize: '0.78rem', padding: '4px 10px', background: schedule.night > 0 ? 'var(--md-sys-color-primary-container)' : 'var(--md-sys-color-surface-container-high)', color: schedule.night > 0 ? 'var(--md-sys-color-on-primary-container)' : 'var(--md-sys-color-on-surface-variant)', borderRadius: 'var(--r-full)', fontWeight: 700, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
                       <Moon size={12} /> Night: {schedule.night ?? '—'}
                     </span>
                     {schedule.timing && (
-                      <span style={{ fontSize: '0.78rem', padding: '3px 8px', background: '#e0f2fe', color: '#0369a1', borderRadius: 'var(--r-full)', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                      <span style={{ fontSize: '0.78rem', padding: '4px 10px', background: 'rgba(56, 189, 248, 0.15)', color: '#38bdf8', borderRadius: 'var(--r-full)', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
                         <Utensils size={12} /> {schedule.timing}
                       </span>
                     )}

@@ -85,7 +85,7 @@ export const Dashboard = () => {
         <div
           onClick={() => navigate('/scanner')}
           className="card"
-          style={{ padding: '24px', cursor: 'pointer', background: 'var(--md-sys-color-surface)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', border: '1px solid var(--border)' }}
+          style={{ padding: '24px', cursor: 'pointer', background: 'var(--md-sys-color-surface-container)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', border: '1px solid var(--border)' }}
         >
           <div>
             <div style={{ width: '48px', height: '48px', borderRadius: 'var(--r-full)', background: 'var(--md-sys-color-primary-container)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--md-sys-color-primary)', marginBottom: '16px' }}>
@@ -107,7 +107,7 @@ export const Dashboard = () => {
         <div
           onClick={() => navigate('/report-analyzer')}
           className="card"
-          style={{ padding: '24px', cursor: 'pointer', background: 'var(--md-sys-color-surface)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', border: '1px solid var(--border)' }}
+          style={{ padding: '24px', cursor: 'pointer', background: 'var(--md-sys-color-surface-container)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', border: '1px solid var(--border)' }}
         >
           <div>
             <div style={{ width: '48px', height: '48px', borderRadius: 'var(--r-full)', background: 'var(--md-sys-color-tertiary-container)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--md-sys-color-on-tertiary-container)', marginBottom: '16px' }}>
@@ -129,7 +129,7 @@ export const Dashboard = () => {
         <div
           onClick={() => navigate('/cabinet')}
           className="card"
-          style={{ padding: '24px', cursor: 'pointer', background: 'var(--md-sys-color-surface)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', border: '1px solid var(--border)' }}
+          style={{ padding: '24px', cursor: 'pointer', background: 'var(--md-sys-color-surface-container)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', border: '1px solid var(--border)' }}
         >
           <div>
             <div style={{ width: '48px', height: '48px', borderRadius: 'var(--r-full)', background: 'var(--md-sys-color-secondary-container)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--md-sys-color-on-secondary-container)', marginBottom: '16px' }}>
@@ -173,7 +173,7 @@ export const Dashboard = () => {
       </div>
 
       {/* ─── Recent Medicine Scans List ───────────────────────────── */}
-      <div className="card" style={{ padding: '24px 28px', background: 'var(--md-sys-color-surface)' }}>
+      <div className="card" style={{ padding: '24px 28px', background: 'var(--md-sys-color-surface-container)' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '18px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <Clock size={20} color="var(--md-sys-color-primary)" />
