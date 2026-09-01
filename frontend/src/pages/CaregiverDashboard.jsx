@@ -57,10 +57,10 @@ export const CaregiverDashboard = () => {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px', flexWrap: 'wrap', gap: '14px' }}>
         <div>
           <h1 style={{ fontSize: '1.9rem', fontWeight: 900, color: 'var(--md-sys-color-on-surface)', margin: '0 0 6px', letterSpacing: '-0.02em' }}>
-            Caregiver & Family Telemetry
+            {t('caregiverTitle')}
           </h1>
           <p style={{ fontSize: '0.9rem', color: 'var(--md-sys-color-on-surface-variant)', margin: 0 }}>
-            Real-time medication adherence, cognitive trend tracking, and missed routine alerts
+            {t('caregiverSubtitle')}
           </p>
         </div>
 
@@ -79,7 +79,7 @@ export const CaregiverDashboard = () => {
             border: isOnline ? '1px solid rgba(16, 185, 129, 0.3)' : '1px solid rgba(239, 68, 68, 0.3)'
           }}>
             {isOnline ? <Wifi size={14} /> : <WifiOff size={14} />}
-            {isOnline ? 'Cloud Synced' : 'Offline Mode'}
+            {isOnline ? t('cloudSynced') : t('offlineMode')}
           </div>
 
           {/* Timeframe Toggle */}
@@ -125,7 +125,7 @@ export const CaregiverDashboard = () => {
             style={{ padding: '8px 14px', display: 'flex', alignItems: 'center', gap: '6px', borderRadius: 'var(--r-full)' }}
           >
             <RefreshCw size={14} className={syncing ? 'spin' : ''} />
-            {syncing ? 'Syncing…' : 'Sync'}
+            {syncing ? 'Syncing…' : t('syncNow')}
           </button>
         </div>
       </div>
@@ -134,7 +134,7 @@ export const CaregiverDashboard = () => {
       <div className="stat-grid" style={{ marginBottom: '28px' }}>
         <div className="stat-card">
           <div className="stat-header">
-            <span className="stat-label">Adherence Rate</span>
+            <span className="stat-label">{t('adherenceRate')}</span>
             <div className="stat-icon" style={{ background: 'var(--md-sys-color-success-container)', color: 'var(--emerald)' }}>
               <Pill size={18} />
             </div>
@@ -143,13 +143,13 @@ export const CaregiverDashboard = () => {
             {metrics.adherenceRate}%
           </div>
           <div className="stat-trend trend-up">
-            <TrendingUp size={14} /> {metrics.takenDoses} of {metrics.totalDosesLogged || 28} doses taken
+            <TrendingUp size={14} /> {metrics.takenDoses} of {metrics.totalDosesLogged || 0} doses taken
           </div>
         </div>
 
         <div className="stat-card">
           <div className="stat-header">
-            <span className="stat-label">Cognitive Index</span>
+            <span className="stat-label">{t('cognitiveIndex')}</span>
             <div className="stat-icon" style={{ background: 'var(--md-sys-color-primary-container)', color: 'var(--md-sys-color-primary)' }}>
               <Trophy size={18} />
             </div>
@@ -164,7 +164,7 @@ export const CaregiverDashboard = () => {
 
         <div className="stat-card">
           <div className="stat-header">
-            <span className="stat-label">Avg Recall Hesitation</span>
+            <span className="stat-label">{t('recallLatency')}</span>
             <div className="stat-icon" style={{ background: 'var(--md-sys-color-tertiary-container)', color: 'var(--md-sys-color-tertiary)' }}>
               <Clock size={18} />
             </div>

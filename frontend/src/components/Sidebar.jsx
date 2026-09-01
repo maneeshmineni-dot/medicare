@@ -52,7 +52,7 @@ export const Sidebar = () => {
 
         {/* Navigation */}
         <nav className="sidebar-nav">
-          <div className="nav-section-label">Menu</div>
+          <div className="nav-section-label">{t('menu')}</div>
           {NAV_ITEMS.map(({ to, icon: Icon, label }) => (
             <NavLink
               key={to}

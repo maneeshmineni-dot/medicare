@@ -5,7 +5,12 @@ import { useLanguage } from '../context/LanguageContext';
 const LANGUAGES = [
   { code: 'en', name: 'English', native: 'English', flag: '🇬🇧', label: 'EN' },
   { code: 'hi', name: 'Hindi', native: 'हिंदी', flag: '🇮🇳', label: 'HI' },
-  { code: 'te', name: 'Telugu', native: 'తెలుగు', flag: '🇮🇳', label: 'TE' }
+  { code: 'te', name: 'Telugu', native: 'తెలుగు', flag: '🇮🇳', label: 'TE' },
+  { code: 'ta', name: 'Tamil', native: 'தமிழ்', flag: '🇮🇳', label: 'TA' },
+  { code: 'kn', name: 'Kannada', native: 'ಕನ್ನಡ', flag: '🇮🇳', label: 'KN' },
+  { code: 'bn', name: 'Bengali', native: 'বাংলা', flag: '🇮🇳', label: 'BN' },
+  { code: 'mr', name: 'Marathi', native: 'मराठी', flag: '🇮🇳', label: 'MR' },
+  { code: 'es', name: 'Spanish', native: 'Español', flag: '🇪🇸', label: 'ES' }
 ];
 
 export const LanguageSelector = ({ direction = 'down', align = 'right', style = {} }) => {

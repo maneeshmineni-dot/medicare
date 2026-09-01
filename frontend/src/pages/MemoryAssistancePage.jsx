@@ -3,11 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import {
   Brain, Sparkles, Heart, Activity, Trophy, Play, Plus, Clock, Users, Shield, Flower2, ArrowRight
 } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 import { cognitiveStorage } from '../services/cognitiveStorage';
 import { AddFamilyQuestionModal } from '../components/cognitive/AddFamilyQuestionModal';
 
 export const MemoryAssistancePage = () => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [stats, setStats] = useState(cognitiveStorage.getStats());
   const [isFamilyModalOpen, setIsFamilyModalOpen] = useState(false);
 
@@ -40,10 +42,10 @@ export const MemoryAssistancePage = () => {
             <Brain size={16} /> Smriti-Setu Cognitive Health Suite
           </div>
           <h1 style={{ fontSize: '2.1rem', fontWeight: 900, color: 'var(--md-sys-color-on-surface)', margin: '0 0 10px', letterSpacing: '-0.02em' }}>
-            Elderly Memory & Cognitive Care
+            {t('memoryCareTitle')}
           </h1>
           <p style={{ fontSize: '1rem', color: 'var(--md-sys-color-on-surface-variant)', lineHeight: 1.6, margin: '0 0 20px' }}>
-            Daily interactive memory recall, personalized family reminiscence trivia, and adaptive neural stimulation designed to support cognitive wellness and Alzheimer’s care.
+            {t('memoryCareSubtitle')}
           </p>
 
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
@@ -61,7 +63,7 @@ export const MemoryAssistancePage = () => {
                 boxShadow: '0 6px 20px rgba(139, 92, 246, 0.4)'
               }}
             >
-              <Play size={18} /> Start Memory Match Game
+              <Play size={18} /> {t('startMemoryMatch')}
             </button>
             <button
               onClick={() => navigate('/cognitive-games?mode=quiz')}
@@ -74,7 +76,7 @@ export const MemoryAssistancePage = () => {
                 gap: '8px'
               }}
             >
-              <Sparkles size={18} color="var(--md-sys-color-primary)" /> Daily Orientation Quiz
+              <Sparkles size={18} color="var(--md-sys-color-primary)" /> {t('dailyQuiz')}
             </button>
           </div>
         </div>
@@ -84,7 +86,7 @@ export const MemoryAssistancePage = () => {
       <div className="stat-grid" style={{ marginBottom: '28px' }}>
         <div className="stat-card">
           <div className="stat-header">
-            <span className="stat-label">Cognitive Index</span>
+            <span className="stat-label">{t('cognitiveIndex')}</span>
             <div className="stat-icon" style={{ background: 'var(--md-sys-color-primary-container)', color: 'var(--md-sys-color-primary)' }}>
               <Trophy size={18} />
             </div>
@@ -97,7 +99,7 @@ export const MemoryAssistancePage = () => {
 
         <div className="stat-card">
           <div className="stat-header">
-            <span className="stat-label">Recall Latency</span>
+            <span className="stat-label">{t('recallLatency')}</span>
             <div className="stat-icon" style={{ background: 'var(--md-sys-color-success-container)', color: 'var(--emerald)' }}>
               <Clock size={18} />
             </div>
@@ -110,7 +112,7 @@ export const MemoryAssistancePage = () => {
 
         <div className="stat-card">
           <div className="stat-header">
-            <span className="stat-label">Caregiver Telemetry</span>
+            <span className="stat-label">{t('caregiverTelemetry')}</span>
             <div className="stat-icon" style={{ background: 'var(--md-sys-color-tertiary-container)', color: 'var(--md-sys-color-tertiary)' }}>
               <Heart size={18} />
             </div>
@@ -120,7 +122,7 @@ export const MemoryAssistancePage = () => {
             onClick={() => navigate('/caregiver')}
             style={{ fontSize: '0.82rem', color: 'var(--md-sys-color-primary)', fontWeight: 700, cursor: 'pointer', marginTop: '6px' }}
           >
-            View Dashboard →
+            {t('viewDashboard')}
           </div>
         </div>
       </div>
