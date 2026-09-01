@@ -44,6 +44,7 @@ class VoiceAgentController {
         success: true,
         command: cleanCommand,
         intent,
+        action: intent,
         targetRoute,
         spokenFeedback
       });
