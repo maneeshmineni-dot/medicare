@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { LanguageProvider } from './context/LanguageContext';
+import { AssistantProvider } from './context/AssistantContext';
 import { AppLayout } from './components/AppLayout';
 
 // Auth pages
@@ -43,34 +44,36 @@ export function App() {
   return (
     <LanguageProvider>
       <AuthProvider>
-        <Router>
-          <Routes>
-            {/* Auth — no sidebar */}
-            <Route path="/login"    element={<Login />} />
-            <Route path="/register" element={<Register />} />
+        <AssistantProvider>
+          <Router>
+            <Routes>
+              {/* Auth — no sidebar */}
+              <Route path="/login"    element={<Login />} />
+              <Route path="/register" element={<Register />} />
 
-            {/* Public Legal Policies */}
-            <Route path="/privacy" element={<AppLayout><PrivacyPolicy /></AppLayout>} />
-            <Route path="/terms"   element={<AppLayout><TermsOfService /></AppLayout>} />
+              {/* Public Legal Policies */}
+              <Route path="/privacy" element={<AppLayout><PrivacyPolicy /></AppLayout>} />
+              <Route path="/terms"   element={<AppLayout><TermsOfService /></AppLayout>} />
 
-            {/* Protected — with sidebar */}
-            <Route path="/dashboard"          element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-            <Route path="/assistant"          element={<ProtectedRoute><Assistant /></ProtectedRoute>} />
-            <Route path="/scanner"            element={<ProtectedRoute><Scanner /></ProtectedRoute>} />
-            <Route path="/report-analyzer"    element={<ProtectedRoute><ReportAnalyzer /></ProtectedRoute>} />
-            <Route path="/cabinet"            element={<ProtectedRoute><Cabinet /></ProtectedRoute>} />
-            <Route path="/memory-assistance"  element={<ProtectedRoute><MemoryAssistancePage /></ProtectedRoute>} />
-            <Route path="/cognitive-games"    element={<ProtectedRoute><CognitiveGamePage /></ProtectedRoute>} />
-            <Route path="/caregiver"          element={<ProtectedRoute><CaregiverDashboard /></ProtectedRoute>} />
-            <Route path="/voice-therapy"      element={<ProtectedRoute><VoiceTherapistRoom /></ProtectedRoute>} />
-            <Route path="/history"            element={<ProtectedRoute><History /></ProtectedRoute>} />
-            <Route path="/scan/:id"           element={<ProtectedRoute><ScanDetail /></ProtectedRoute>} />
-            <Route path="/profile"            element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+              {/* Protected — with sidebar */}
+              <Route path="/dashboard"          element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+              <Route path="/assistant"          element={<ProtectedRoute><Assistant /></ProtectedRoute>} />
+              <Route path="/scanner"            element={<ProtectedRoute><Scanner /></ProtectedRoute>} />
+              <Route path="/report-analyzer"    element={<ProtectedRoute><ReportAnalyzer /></ProtectedRoute>} />
+              <Route path="/cabinet"            element={<ProtectedRoute><Cabinet /></ProtectedRoute>} />
+              <Route path="/memory-assistance"  element={<ProtectedRoute><MemoryAssistancePage /></ProtectedRoute>} />
+              <Route path="/cognitive-games"    element={<ProtectedRoute><CognitiveGamePage /></ProtectedRoute>} />
+              <Route path="/caregiver"          element={<ProtectedRoute><CaregiverDashboard /></ProtectedRoute>} />
+              <Route path="/voice-therapy"      element={<ProtectedRoute><VoiceTherapistRoom /></ProtectedRoute>} />
+              <Route path="/history"            element={<ProtectedRoute><History /></ProtectedRoute>} />
+              <Route path="/scan/:id"           element={<ProtectedRoute><ScanDetail /></ProtectedRoute>} />
+              <Route path="/profile"            element={<ProtectedRoute><Profile /></ProtectedRoute>} />
 
-            {/* Default */}
-            <Route path="*" element={<Navigate to="/dashboard" replace />} />
-          </Routes>
-        </Router>
+              {/* Default */}
+              <Route path="*" element={<Navigate to="/dashboard" replace />} />
+            </Routes>
+          </Router>
+        </AssistantProvider>
       </AuthProvider>
     </LanguageProvider>
   );
