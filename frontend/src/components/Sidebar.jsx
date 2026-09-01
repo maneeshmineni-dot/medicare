@@ -5,7 +5,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { ThemeToggle } from './ThemeToggle';
 import { LanguageSelector } from './LanguageSelector';
 import {
-  LayoutDashboard, Camera, History, User, LogOut, Pill, FileText, Package, Bot
+  LayoutDashboard, Camera, History, User, LogOut, Pill, FileText, Package, Bot, Brain, Flower2, Users
 } from 'lucide-react';
 
 export const Sidebar = () => {
@@ -14,13 +14,16 @@ export const Sidebar = () => {
   const navigate = useNavigate();
 
   const NAV_ITEMS = [
-    { to: '/dashboard',       icon: LayoutDashboard, label: t('home') },
-    { to: '/assistant',       icon: Bot,             label: t('assistant') },
-    { to: '/scanner',         icon: Camera,          label: t('scanner') },
-    { to: '/report-analyzer', icon: FileText,        label: t('reportsRx') },
-    { to: '/cabinet',         icon: Package,         label: t('cabinet') },
-    { to: '/history',         icon: History,         label: t('history') },
-    { to: '/profile',         icon: User,            label: t('profile') },
+    { to: '/dashboard',          icon: LayoutDashboard, label: t('home') },
+    { to: '/assistant',          icon: Bot,             label: t('assistant') || 'Assistant' },
+    { to: '/scanner',            icon: Camera,          label: t('scanner') },
+    { to: '/report-analyzer',    icon: FileText,        label: t('reportsRx') },
+    { to: '/cabinet',            icon: Package,         label: t('cabinet') },
+    { to: '/memory-assistance',  icon: Brain,           label: t('memoryCare') || 'Memory Care' },
+    { to: '/voice-therapy',      icon: Flower2,         label: t('voiceTherapy') || 'Voice Therapy' },
+    { to: '/caregiver',          icon: Users,           label: t('caregiver') || 'Caregiver' },
+    { to: '/history',            icon: History,         label: t('history') },
+    { to: '/profile',            icon: User,            label: t('profile') },
   ];
 
   const handleLogout = () => {

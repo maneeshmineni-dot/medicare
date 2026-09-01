@@ -9,16 +9,20 @@ import { Login }    from './pages/Login';
 import { Register } from './pages/Register';
 
 // App pages
-import { Dashboard }      from './pages/Dashboard';
-import { Assistant }      from './pages/Assistant';
-import { Scanner }        from './pages/Scanner';
-import { ReportAnalyzer } from './pages/ReportAnalyzer';
-import { Cabinet }        from './pages/Cabinet';
-import { History }        from './pages/History';
-import { ScanDetail }     from './pages/ScanDetail';
-import { Profile }        from './pages/Profile';
-import { PrivacyPolicy }  from './pages/PrivacyPolicy';
-import { TermsOfService }  from './pages/TermsOfService';
+import { Dashboard }            from './pages/Dashboard';
+import { Assistant }            from './pages/Assistant';
+import { Scanner }              from './pages/Scanner';
+import { ReportAnalyzer }       from './pages/ReportAnalyzer';
+import { Cabinet }              from './pages/Cabinet';
+import { MemoryAssistancePage } from './pages/MemoryAssistancePage';
+import { CognitiveGamePage }    from './pages/CognitiveGamePage';
+import { CaregiverDashboard }   from './pages/CaregiverDashboard';
+import { VoiceTherapistRoom }   from './components/voice/VoiceTherapistRoom';
+import { History }              from './pages/History';
+import { ScanDetail }           from './pages/ScanDetail';
+import { Profile }              from './pages/Profile';
+import { PrivacyPolicy }        from './pages/PrivacyPolicy';
+import { TermsOfService }        from './pages/TermsOfService';
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
@@ -50,14 +54,18 @@ export function App() {
             <Route path="/terms"   element={<AppLayout><TermsOfService /></AppLayout>} />
 
             {/* Protected — with sidebar */}
-            <Route path="/dashboard"       element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-            <Route path="/assistant"       element={<ProtectedRoute><Assistant /></ProtectedRoute>} />
-            <Route path="/scanner"         element={<ProtectedRoute><Scanner /></ProtectedRoute>} />
-            <Route path="/report-analyzer" element={<ProtectedRoute><ReportAnalyzer /></ProtectedRoute>} />
-            <Route path="/cabinet"         element={<ProtectedRoute><Cabinet /></ProtectedRoute>} />
-            <Route path="/history"         element={<ProtectedRoute><History /></ProtectedRoute>} />
-            <Route path="/scan/:id"        element={<ProtectedRoute><ScanDetail /></ProtectedRoute>} />
-            <Route path="/profile"         element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+            <Route path="/dashboard"          element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+            <Route path="/assistant"          element={<ProtectedRoute><Assistant /></ProtectedRoute>} />
+            <Route path="/scanner"            element={<ProtectedRoute><Scanner /></ProtectedRoute>} />
+            <Route path="/report-analyzer"    element={<ProtectedRoute><ReportAnalyzer /></ProtectedRoute>} />
+            <Route path="/cabinet"            element={<ProtectedRoute><Cabinet /></ProtectedRoute>} />
+            <Route path="/memory-assistance"  element={<ProtectedRoute><MemoryAssistancePage /></ProtectedRoute>} />
+            <Route path="/cognitive-games"    element={<ProtectedRoute><CognitiveGamePage /></ProtectedRoute>} />
+            <Route path="/caregiver"          element={<ProtectedRoute><CaregiverDashboard /></ProtectedRoute>} />
+            <Route path="/voice-therapy"      element={<ProtectedRoute><VoiceTherapistRoom /></ProtectedRoute>} />
+            <Route path="/history"            element={<ProtectedRoute><History /></ProtectedRoute>} />
+            <Route path="/scan/:id"           element={<ProtectedRoute><ScanDetail /></ProtectedRoute>} />
+            <Route path="/profile"            element={<ProtectedRoute><Profile /></ProtectedRoute>} />
 
             {/* Default */}
             <Route path="*" element={<Navigate to="/dashboard" replace />} />

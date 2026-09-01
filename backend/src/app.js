@@ -103,9 +103,12 @@ if (express) {
   app.get('/health', healthHandler);
   app.get('/ping', (req, res) => res.status(200).send('pong'));
 
+const cognitiveRoutes = require('./routes/cognitiveRoutes');
+
   app.use('/api/auth', authRoutes);
   app.use('/api', visionRoutes);
   app.use('/api', historyRoutes);
+  app.use('/api', cognitiveRoutes);
   app.use(errorHandler);
 } else {
   // Built-in Lightweight HTTP Server Fallback (Zero External Dependencies Required)

@@ -3,6 +3,8 @@ import { Sidebar } from './Sidebar';
 import { EmergencyBanner } from './EmergencyBanner';
 import { CookieConsentBanner } from './CookieConsentBanner';
 import { FloatingAssistantWidget } from './FloatingAssistantWidget';
+import { FloatingVoiceAgentButton } from './voice/FloatingVoiceAgentButton';
+import { FullScreenReminderModal } from './cognitive/FullScreenReminderModal';
 
 export const AppLayout = ({ children }) => (
   <div className="app-shell">
@@ -13,6 +15,8 @@ export const AppLayout = ({ children }) => (
         {children}
       </div>
       <FloatingAssistantWidget />
+      <FloatingVoiceAgentButton />
+      <FullScreenReminderModal />
       <CookieConsentBanner />
     </main>
   </div>
