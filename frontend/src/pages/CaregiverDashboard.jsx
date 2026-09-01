@@ -43,12 +43,12 @@ export const CaregiverDashboard = () => {
   };
 
   const metrics = analyticsData?.metrics || {
-    adherenceRate: 94,
-    totalDosesLogged: 28,
-    takenDoses: 26,
-    cognitiveHealthScore: 88,
-    totalCognitiveSessions: 12,
-    avgHesitationMs: 1150
+    adherenceRate: 0,
+    totalDosesLogged: 0,
+    takenDoses: 0,
+    cognitiveHealthScore: 0,
+    totalCognitiveSessions: 0,
+    avgHesitationMs: 0
   };
 
   return (
@@ -191,11 +191,11 @@ export const CaregiverDashboard = () => {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '12px' }}>
           <div style={{ background: 'var(--md-sys-color-surface-container)', padding: '14px', borderRadius: '16px' }}>
             <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--md-sys-color-on-surface-variant)' }}>Primary Caregiver</div>
-            <div style={{ fontSize: '0.98rem', fontWeight: 800, marginTop: '4px' }}>Dr. Ramesh (Family Physician)</div>
+            <div style={{ fontSize: '0.98rem', fontWeight: 800, marginTop: '4px' }}>Family Caregiver Protocol</div>
           </div>
           <div style={{ background: 'var(--md-sys-color-surface-container)', padding: '14px', borderRadius: '16px' }}>
-            <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--md-sys-color-on-surface-variant)' }}>Next Routine Slot</div>
-            <div style={{ fontSize: '0.98rem', fontWeight: 800, marginTop: '4px' }}>Tonight @ 09:00 PM (Bedtime)</div>
+            <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--md-sys-color-on-surface-variant)' }}>Routine Telemetry</div>
+            <div style={{ fontSize: '0.98rem', fontWeight: 800, marginTop: '4px' }}>Cabinet Sync Enabled</div>
           </div>
           <div style={{ background: 'var(--md-sys-color-surface-container)', padding: '14px', borderRadius: '16px' }}>
             <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--md-sys-color-on-surface-variant)' }}>Emergency Protocol</div>

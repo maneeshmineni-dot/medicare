@@ -58,14 +58,14 @@ class CognitiveController {
       const totalSessions = sessions.length;
       const avgScore = totalSessions > 0
         ? Math.round(sessions.reduce((acc, s) => acc + (s.score || 0), 0) / totalSessions)
-        : 85;
+        : 0;
       const avgHesitationMs = totalSessions > 0
         ? Math.round(sessions.reduce((acc, s) => acc + (s.hesitation_score || 0), 0) / totalSessions)
-        : 1200;
+        : 0;
 
       const totalDoses = adherenceLogs.length;
       const takenDoses = adherenceLogs.filter(a => a.status === 'taken').length;
-      const adherenceRate = totalDoses > 0 ? Math.round((takenDoses / totalDoses) * 100) : 94;
+      const adherenceRate = totalDoses > 0 ? Math.round((takenDoses / totalDoses) * 100) : 0;
 
       return res.status(200).json({
         success: true,

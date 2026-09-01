@@ -73,14 +73,14 @@ class SyncManager {
       success: true,
       timeframeDays: days,
       metrics: {
-        adherenceRate: 92,
-        totalDosesLogged: 28,
-        takenDoses: 26,
-        cognitiveHealthScore: localStats.avgScore,
-        totalCognitiveSessions: localStats.totalSessions,
-        avgHesitationMs: localStats.avgHesitationMs
+        adherenceRate: 0,
+        totalDosesLogged: 0,
+        takenDoses: 0,
+        cognitiveHealthScore: localStats.avgScore || 0,
+        totalCognitiveSessions: localStats.totalSessions || 0,
+        avgHesitationMs: localStats.avgHesitationMs || 0
       },
-      sessions: localStats.recentSessions
+      sessions: localStats.recentSessions || []
     };
   }
 }

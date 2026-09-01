@@ -40,10 +40,10 @@ export const cognitiveStorage = {
     const totalSessions = filtered.length;
     const avgScore = totalSessions > 0
       ? Math.round(filtered.reduce((acc, s) => acc + (s.score || 0), 0) / totalSessions)
-      : 85;
+      : 0;
     const avgHesitationMs = totalSessions > 0
       ? Math.round(filtered.reduce((acc, s) => acc + (s.hesitationScore || 0), 0) / totalSessions)
-      : 1200;
+      : 0;
 
     return {
       totalSessions,

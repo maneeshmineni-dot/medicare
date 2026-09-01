@@ -89,9 +89,9 @@ export const MemoryAssistancePage = () => {
               <Trophy size={18} />
             </div>
           </div>
-          <div className="stat-value">{stats.avgScore} <span style={{ fontSize: '1rem', fontWeight: 600 }}>/ 100</span></div>
+          <div className="stat-value">{stats.totalSessions > 0 ? stats.avgScore : 0} <span style={{ fontSize: '1rem', fontWeight: 600 }}>/ 100</span></div>
           <div className="stat-trend trend-up">
-            <Activity size={14} /> Based on {stats.totalSessions} sessions
+            <Activity size={14} /> {stats.totalSessions > 0 ? `Based on ${stats.totalSessions} sessions` : 'No test sessions yet'}
           </div>
         </div>
 
@@ -102,9 +102,9 @@ export const MemoryAssistancePage = () => {
               <Clock size={18} />
             </div>
           </div>
-          <div className="stat-value">{stats.avgHesitationMs} <span style={{ fontSize: '1rem', fontWeight: 600 }}>ms</span></div>
+          <div className="stat-value">{stats.totalSessions > 0 ? `${stats.avgHesitationMs} ms` : '—'}</div>
           <div className="stat-trend trend-up">
-            Healthy response cadence
+            {stats.totalSessions > 0 ? 'Response cadence tracked' : 'Play a game to measure'}
           </div>
         </div>
 
