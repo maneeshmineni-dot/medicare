@@ -1,4 +1,12 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
+let API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
+
+// Safety guard: if running in production on Vercel/Cloud, don't attempt to fetch from localhost or dead Render endpoints
+if (typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+  if (API_BASE_URL.includes('localhost') || API_BASE_URL.includes('127.0.0.1') || API_BASE_URL.includes('onrender.com')) {
+    console.warn('[PharmaVision API] Detected unreachable host in production VITE_API_URL (' + API_BASE_URL + '). Defaulting to same-origin /api');
+    API_BASE_URL = '/api';
+  }
+}
 
 function getAuthHeader() {
   const token = localStorage.getItem('pharmavision_token') || localStorage.getItem('token');

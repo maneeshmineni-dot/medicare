@@ -3,7 +3,7 @@
   "buildCommand": "if [ -d \"frontend\" ]; then cd frontend && npm install && npm run build; else npm run build; fi",
   "outputDirectory": "frontend/dist",
   "functions": {
-    "api/index.js": {
+    "api/**": {
       "maxDuration": 60,
       "memory": 1024
     }

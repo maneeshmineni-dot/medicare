@@ -1,9 +1,8 @@
 const app = require('../backend/src/app');
 
 module.exports = (req, res) => {
-  // If Vercel rewrote the URL, recover original requested path
   const matchedPath = req.headers['x-matched-path'] || req.headers['x-vercel-matched-path'];
-  if (matchedPath && matchedPath !== '/api/index.js') {
+  if (matchedPath && matchedPath !== '/api/[...path]') {
     req.url = matchedPath;
   }
   return app(req, res);
