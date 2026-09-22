@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "if [ -d \"frontend\" ]; then cd frontend && npm install && npm run build; else npm run build; fi",
+  "buildCommand": "cd backend && npm install && cd ../frontend && npm install && npm run build",
   "outputDirectory": "frontend/dist",
   "functions": {
     "api/**": {
