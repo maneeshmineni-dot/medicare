@@ -1,9 +1,39 @@
 -- ==============================================================================
--- PharmaVision AI & Smriti-Setu Cognitive Health - Supabase SQL Schema
--- Run this in your Supabase SQL Editor (https://zrhnqwazjrqvhanbxrqn.supabase.co)
+-- PharmaVision AI Cognitive & Clinical Health - Supabase SQL Schema
+-- Run this in your Supabase SQL Editor (https://supabase.com/dashboard/project/_/sql)
 -- ==============================================================================
 
--- 1. Cognitive Game Telemetry & Session Records
+-- 1. Users Table (Authentication & Profile)
+CREATE TABLE IF NOT EXISTS users (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    email TEXT UNIQUE NOT NULL,
+    password_hash TEXT NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Index for fast login lookups by email
+CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
+
+-- 2. Scan History & Medicine Cabinet Records
+CREATE TABLE IF NOT EXISTS scan_history (
+    id TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL,
+    medication_name TEXT NOT NULL,
+    primary_use TEXT,
+    dosage_instructions TEXT,
+    warnings JSONB DEFAULT '[]'::jsonb,
+    active_ingredients JSONB DEFAULT '[]'::jsonb,
+    image_thumbnail TEXT,
+    raw_analysis TEXT,
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Index for fast user cabinet queries
+CREATE INDEX IF NOT EXISTS idx_scan_history_user_id ON scan_history(user_id);
+CREATE INDEX IF NOT EXISTS idx_scan_history_created_at ON scan_history(created_at DESC);
+
+-- 3. Cognitive Game Telemetry & Session Records
 CREATE TABLE IF NOT EXISTS cognitive_sessions (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     session_id TEXT UNIQUE NOT NULL,
@@ -19,7 +49,7 @@ CREATE TABLE IF NOT EXISTS cognitive_sessions (
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 2. Family Custom Memory Questions
+-- 4. Family Custom Memory Questions
 CREATE TABLE IF NOT EXISTS family_questions (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id TEXT NOT NULL,
@@ -32,7 +62,7 @@ CREATE TABLE IF NOT EXISTS family_questions (
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 3. Routine Adherence & Caregiver Telemetry
+-- 5. Routine Adherence & Caregiver Telemetry
 CREATE TABLE IF NOT EXISTS routine_adherence (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id TEXT NOT NULL,
@@ -44,7 +74,7 @@ CREATE TABLE IF NOT EXISTS routine_adherence (
     notes TEXT
 );
 
--- 4. Caregiver-Patient Associations
+-- 6. Caregiver-Patient Associations
 CREATE TABLE IF NOT EXISTS caregiver_links (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     caregiver_id TEXT NOT NULL,
@@ -52,3 +82,4 @@ CREATE TABLE IF NOT EXISTS caregiver_links (
     relationship TEXT,
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
+

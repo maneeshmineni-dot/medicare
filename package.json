@@ -3,7 +3,12 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "cd frontend && npm install && npm run build"
+    "build": "cd frontend && npm install && npm run build",
+    "test": "cd backend && npm test",
+    "start": "cd backend && npm start",
+    "dev": "cd backend && npm run dev",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev"
   },
   "dependencies": {
     "@google/generative-ai": "^0.17.0",

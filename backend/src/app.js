@@ -105,12 +105,21 @@ if (express) {
   app.get('/health', healthHandler);
   app.get('/ping', (req, res) => res.status(200).send('pong'));
 
-const cognitiveRoutes = require('./routes/cognitiveRoutes');
+  const cognitiveRoutes = require('./routes/cognitiveRoutes');
 
+  // Mount on /api (for local dev & full-path rewrites) and root (for serverless path-stripped handlers)
   app.use('/api/auth', authRoutes);
+  app.use('/auth', authRoutes);
+
   app.use('/api', visionRoutes);
+  app.use('/', visionRoutes);
+
   app.use('/api', historyRoutes);
+  app.use('/', historyRoutes);
+
   app.use('/api', cognitiveRoutes);
+  app.use('/', cognitiveRoutes);
+
   app.use(errorHandler);
 } else {
   // Built-in Lightweight HTTP Server Fallback (Zero External Dependencies Required)
@@ -129,6 +138,19 @@ const cognitiveRoutes = require('./routes/cognitiveRoutes');
     { method: 'POST', path: '/api/history/batch', middleware: require('./middleware/auth').optionalAuth, handler: require('./controllers/prescriptionController').batchSaveMedicines },
     { method: 'POST', path: '/api/vision/chat', middleware: require('./middleware/auth').optionalAuth, handler: require('./controllers/visionController').chatWithMedicineAI },
     { method: 'POST', path: '/api/chat', middleware: require('./middleware/auth').optionalAuth, handler: require('./controllers/visionController').chatWithMedicineAI },
+
+    { method: 'POST', path: '/api/assistant/chat', middleware: require('./middleware/auth').optionalAuth, handler: require('./controllers/assistantController').chatWithAssistant },
+    { method: 'POST', path: '/api/chat/assistant', middleware: require('./middleware/auth').optionalAuth, handler: require('./controllers/assistantController').chatWithAssistant },
+    { method: 'POST', path: '/api/therapy/prompt', middleware: require('./middleware/auth').optionalAuth, handler: require('./controllers/therapyController').generateTherapyResponse },
+    { method: 'POST', path: '/api/voice/process-command', middleware: require('./middleware/auth').optionalAuth, handler: require('./controllers/voiceAgentController').processVoiceCommand },
+    { method: 'POST', path: '/api/translate/live', middleware: require('./middleware/auth').optionalAuth, handler: require('./controllers/translationController').translateLive },
+    { method: 'POST', path: '/api/tts/synthesize', middleware: require('./middleware/auth').optionalAuth, handler: require('./controllers/ttsController').synthesize },
+    { method: 'POST', path: '/api/cognitive/sync', middleware: require('./middleware/auth').optionalAuth, handler: require('./controllers/cognitiveController').batchSync },
+    { method: 'POST', path: '/api/cognitive/session', middleware: require('./middleware/auth').optionalAuth, handler: require('./controllers/cognitiveController').saveSession },
+    { method: 'GET', path: '/api/cognitive/caregiver-analytics', middleware: require('./middleware/auth').optionalAuth, handler: require('./controllers/cognitiveController').getCaregiverAnalytics },
+    { method: 'GET', path: '/api/fda/lookup', handler: require('./controllers/visionController').lookupNdc },
+    { method: 'GET', path: '/api/cyp450/analyze', handler: require('./controllers/visionController').analyzeCyp450 },
+    { method: 'POST', path: '/api/cyp450/analyze', handler: require('./controllers/visionController').analyzeCyp450 },
 
     { method: 'GET', path: '/api/history', middleware: require('./middleware/auth').optionalAuth, handler: require('./controllers/historyController').getHistory },
     { method: 'DELETE', path: '/api/history/:id', middleware: require('./middleware/auth').optionalAuth, handler: require('./controllers/historyController').deleteHistoryItem }

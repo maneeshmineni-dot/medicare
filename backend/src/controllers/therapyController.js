@@ -1,5 +1,9 @@
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const { getNextGeminiKey } = require('../services/geminiKeyManager');
+const {
+  getTherapyFallback,
+  getLanguageDisplayName
+} = require('../utils/languageUtils');
 
 class TherapyController {
   /**
@@ -22,10 +26,12 @@ class TherapyController {
         reminiscence: 'Encourage happy nostalgic memories of family, childhood stories, and fond life moments.'
       };
 
-      const systemInstruction = `You are "Smriti Sathi" (Compassionate Clinical & Memory Companion).
+      const targetLangDisplay = getLanguageDisplayName(language);
+
+      const systemInstruction = `You are "PharmaVision Companion" (Compassionate Clinical & Memory Companion).
 The patient's name is "${patientName}".
 Therapy Focus Mode: ${mode} (${modePrompts[mode] || modePrompts.calm}).
-Language Requested: "${language}". Always respond in the requested language (e.g. if Telugu, reply in warm Telugu script; if Hindi, reply in gentle Hindi; if English, warm English).
+Language Requested: "${targetLangDisplay}". Always respond naturally in ${targetLangDisplay}.
 Keep your message short (2-4 gentle sentences), empathetic, easy to comprehend for an elderly patient, and emotionally supportive.`;
 
       let aiResponseText = null;
@@ -66,13 +72,7 @@ Keep your message short (2-4 gentle sentences), empathetic, easy to comprehend f
 
       // Deterministic Fallback if no keys configured
       if (!aiResponseText) {
-        const fallbacks = {
-          te: `నమస్కారం ${patientName} గారు, మీరు సురక్షితంగా ఉన్నారు. ప్రశాంతంగా ఊపిరి తీసుకోండి. నేను మీకు తోడుగా ఉన్నాను.`,
-          hi: `नमस्ते ${patientName} जी, आप बिल्कुल सुरक्षित और अपनों के साथ हैं। गहरी सांस लें, सब ठीक है।`,
-          ta: `வணக்கம் ${patientName}, நீங்கள் பாதுகாப்பாக இருக்கிறீர்கள். அமைதியாக இருங்கள், நாங்கள் உங்களுடன் இருக்கிறோம்.`,
-          en: `Hello ${patientName}, you are safe and loved. Take a deep, gentle breath. Everything is going to be okay.`
-        };
-        aiResponseText = fallbacks[language] || fallbacks.en;
+        aiResponseText = getTherapyFallback(language, patientName);
       }
 
       return res.status(200).json({

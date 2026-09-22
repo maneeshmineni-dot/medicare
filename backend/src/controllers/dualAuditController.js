@@ -1,6 +1,10 @@
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const { generateWithFailover } = require('../services/geminiKeyManager');
 const ScanHistory = require('../models/ScanHistory');
+const {
+  getReportLangInstruction,
+  getLanguageDisplayName
+} = require('../utils/languageUtils');
 
 const DUAL_AUDIT_SYSTEM_PROMPT = `
 You are PharmaVision AI's Senior Clinical Pharmacologist and Diagnostic Auditor.
@@ -114,13 +118,11 @@ async function analyzeDualAudit(req, res, next) {
         const labPart = { inlineData: { data: cleanLabData, mimeType: labMimeType || 'image/jpeg' } };
         const rxPart = { inlineData: { data: cleanRxData, mimeType: rxMimeType || 'image/jpeg' } };
 
-        const langPrompt = targetLanguage === 'hi'
-          ? 'Please provide all text values (summary, clinicalVerdict, alerts, clinicalNotes, warnings, sideEffects, advice) in Hindi (हिंदी). Keep medication names recognizable.'
-          : targetLanguage === 'te'
-          ? 'Please provide all text values (summary, clinicalVerdict, alerts, clinicalNotes, warnings, sideEffects, advice) in Telugu (తెలుగు). Keep medication names recognizable.'
-          : 'Respond in clear, professional English.';
+        const langInstruction = getReportLangInstruction(targetLanguage);
+        const targetLangDisplay = getLanguageDisplayName(targetLanguage);
+        const langPrompt = `Please provide all text values (summary, clinicalVerdict, alerts, clinicalNotes, warnings, sideEffects, advice) in ${targetLangDisplay}. Keep medication names recognizable.`;
 
-        const prompt = `${DUAL_AUDIT_SYSTEM_PROMPT}\nLANGUAGE REQUIREMENT: ${langPrompt}\nNOTE: Document 1 is the Diagnostic Lab Report. Document 2 is the Doctor's Prescription. Audit both together.`;
+        const prompt = `${DUAL_AUDIT_SYSTEM_PROMPT}\nLANGUAGE REQUIREMENT: ${langInstruction}\n${langPrompt}\nNOTE: Document 1 is the Diagnostic Lab Report. Document 2 is the Doctor's Prescription. Audit both together.`;
 
         const response = await generateWithFailover({
           prompt,

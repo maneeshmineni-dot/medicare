@@ -32,7 +32,7 @@ export const generateDualAuditPDF = (result) => {
     <html lang="en">
     <head>
       <meta charset="UTF-8" />
-      <title>PharmaVision AI — 360° Clinical Dual-Audit Report</title>
+      <title>PharmaVision AI - Clinical Dual-Audit Report</title>
       <style>
         @page {
           size: A4;
@@ -288,7 +288,7 @@ export const generateCabinetSummaryPDF = (medications = []) => {
     <html lang="en">
     <head>
       <meta charset="UTF-8" />
-      <title>PharmaVision AI — Patient Active Medicine Cabinet</title>
+      <title>PharmaVision AI - Patient Active Medicine Cabinet</title>
       <style>
         @page { size: A4; margin: 15mm; }
         body {

@@ -126,3 +126,85 @@ describe('💊 Clinical Pharmacology & Disease Categorization Engine', () => {
     });
   });
 });
+
+// 4. Test Backend Multilingual Localization Engine
+describe('🌐 Backend Multilingual AI Prompt Engine', () => {
+  const {
+    LANGUAGE_MAP,
+    normalizeLang,
+    getLanguageDisplayName,
+    getAssistantLangInstruction,
+    getVisionLangInstruction,
+    getReportLangInstruction,
+    getPrescriptionLangInstruction,
+    getTherapyFallback
+  } = require('../src/utils/languageUtils');
+
+  const languages = ['en', 'hi', 'te', 'ta', 'kn', 'bn', 'mr', 'es'];
+
+  test('All 8 Languages are present in LANGUAGE_MAP with rich prompt instructions', () => {
+    languages.forEach(lang => {
+      assert.ok(LANGUAGE_MAP[lang], `Missing ${lang} in LANGUAGE_MAP`);
+      assert.ok(getLanguageDisplayName(lang).length > 0);
+      assert.ok(getAssistantLangInstruction(lang).length > 0);
+      assert.ok(getVisionLangInstruction(lang).length > 0);
+      assert.ok(getReportLangInstruction(lang).length > 0);
+      assert.ok(getPrescriptionLangInstruction(lang).length > 0);
+      assert.ok(getTherapyFallback(lang, 'Aarav').includes('Aarav'));
+    });
+  });
+
+  test('Gracefully normalizes unknown languages to English', () => {
+    assert.strictEqual(normalizeLang('xyz'), 'en');
+    assert.strictEqual(normalizeLang(null), 'en');
+    assert.strictEqual(getLanguageDisplayName('unknown'), 'English');
+  });
+});
+
+// 5. Test Pharmacokinetics & CYP450 Metabolic Pathway Engine
+describe('🧬 Pharmacokinetics & CYP450 Metabolic Pathway Engine', () => {
+  const PharmacokineticsService = require('../src/services/pharmacokineticsService');
+
+  test('Finds curated pharmacokinetics records for core cardiovascular and antimicrobial agents', () => {
+    const atorvastatin = PharmacokineticsService.findRecord('Atorvastatin 20mg');
+    assert.ok(atorvastatin);
+    assert.ok(atorvastatin.cypSubstrates.some(s => s.includes('CYP3A4')));
+
+    const clarithromycin = PharmacokineticsService.findRecord('Clarithromycin');
+    assert.ok(clarithromycin);
+    assert.ok(clarithromycin.cypInhibitors.some(i => i.includes('CYP3A4')));
+  });
+
+  test('Infers pharmacologic class and CYP parameters for unlisted suffixes', () => {
+    const unknownStatin = PharmacokineticsService.findRecord('Pitavastatin');
+    assert.strictEqual(unknownStatin.class, 'HMG-CoA Reductase Inhibitor (Statin)');
+    assert.ok(unknownStatin.cypSubstrates.some(s => s.includes('CYP3A4')));
+
+    const unknownArb = PharmacokineticsService.findRecord('Candesartan');
+    assert.strictEqual(unknownArb.class, 'Angiotensin II Receptor Blocker (ARB)');
+
+    const unknownBetaBlocker = PharmacokineticsService.findRecord('Bisoprolol');
+    assert.strictEqual(unknownBetaBlocker.class, 'Beta Adrenergic Blocker');
+    assert.ok(unknownBetaBlocker.cypSubstrates.some(s => s.includes('CYP2D6')));
+  });
+
+  test('Detects CYP3A4 Statin-Macrolide drug-drug interaction conflict', () => {
+    const analysis = PharmacokineticsService.analyzeInteractions(['Atorvastatin', 'Clarithromycin']);
+    assert.strictEqual(analysis.hasMetabolicConflict, true);
+    assert.ok(analysis.conflicts.length > 0);
+    const strongConflict = analysis.conflicts.find(c => c.inhibitorDrug === 'Clarithromycin' && c.substrateDrug === 'Atorvastatin');
+    assert.ok(strongConflict, 'Expected Clarithromycin -> Atorvastatin conflict');
+    assert.strictEqual(strongConflict.enzyme, 'CYP3A4');
+    assert.strictEqual(strongConflict.severity, 'HIGH');
+  });
+
+  test('Generates valid 24-hour Bateman oral plasma concentration curve', () => {
+    const curve = PharmacokineticsService.generatePlasmaCurve(14.0, 2.0, 28.0);
+    assert.strictEqual(curve.length, 49); // 0h to 24h at 0.5h steps = 49 points
+    assert.strictEqual(curve[0].timeHour, 0);
+    assert.strictEqual(curve[0].concentration, 0);
+    assert.ok(curve[4].concentration > 0); // At 2h, concentration should peak near Cmax
+  });
+});
+
+

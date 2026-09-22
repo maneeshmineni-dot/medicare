@@ -8,12 +8,10 @@ try {
 
 const ScanHistory = require('../models/ScanHistory');
 const PharmacokineticsService = require('../services/pharmacokineticsService');
-
-const LANGUAGE_INSTRUCTIONS = {
-  en: 'Respond in clear, compassionate, and medically-structured English. Use bullet points and bold highlights for critical points.',
-  hi: 'आप सभी उत्तर स्पष्ट, सहानुभूतिपूर्ण और चिकित्सकीय रूप से सटीक हिंदी (Hindi) में प्रदान करें। मुख्य बिंदुओं के लिए बुलेट पॉइंट्स और बोल्ड टेक्स्ट का उपयोग करें।',
-  te: 'మీరు అన్ని సమాధానాలను స్పష్టమైన, దయగల మరియు వైద్యపరంగా ఖచ్చితమైన తెలుగు (Telugu) లో అందించండి. ముఖ్యమైన అంశాలకు బుల్లెట్ పాయింట్లు మరియు బోల్డ్ టెక్స్ట్‌ని ఉపయోగించండి.'
-};
+const {
+  getAssistantLangInstruction,
+  getLanguageDisplayName
+} = require('../utils/languageUtils');
 
 /**
  * Assistant Controller - Handles multi-medication patient context aware AI chat
@@ -100,7 +98,8 @@ async function chatWithAssistant(req, res, next) {
     }
 
     // 4. Construct System Instruction with Pharmacological Intelligence
-    const langInstruction = LANGUAGE_INSTRUCTIONS[targetLanguage] || LANGUAGE_INSTRUCTIONS['en'];
+    const langInstruction = getAssistantLangInstruction(targetLanguage);
+    const targetLangDisplay = getLanguageDisplayName(targetLanguage);
 
     const systemPrompt = `You are "PharmaVision AI Health Companion", a dedicated, compassionate, and highly intelligent clinical pharmacology assistant for patient "${patientName}".
 
@@ -128,7 +127,7 @@ CLINICAL SAFETY & ASSISTANCE GUIDELINES:
 
 LANGUAGE REQUIREMENT:
 ${langInstruction}
-You MUST answer in ${targetLanguage === 'hi' ? 'Hindi (हिंदी)' : targetLanguage === 'te' ? 'Telugu (తెలుగు)' : 'English'}.`;
+You MUST answer in ${targetLangDisplay}.`;
 
     // 5. Format Conversation History
     const formattedHistory = [];

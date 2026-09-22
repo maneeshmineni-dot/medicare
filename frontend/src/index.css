@@ -1,71 +1,71 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
 
-/* ─── Material You (MD3) Design Tokens ────────────────────────────────────── */
+/* ─── Material You (MD3) Design Tokens (Clean Clinical Medical Theme) ────────────────────────────────────── */
 :root {
-  /* Tonal Color Palette (Seed Color: Purple/Violet #6750A4) */
-  --md-seed:                    #6750A4;
+  /* Tonal Color Palette (Seed Color: Clinical Sky/Teal #0284C7) */
+  --md-seed:                    #0284C7;
 
-  --md-sys-color-background:              #FFFBFE;
-  --md-sys-color-on-background:          #1C1B1F;
+  --md-sys-color-background:              #F8FAFC;
+  --md-sys-color-on-background:          #0F172A;
 
-  --md-sys-color-surface:                 #FFFBFE;
-  --md-sys-color-on-surface:              #1C1B1F;
-  --md-sys-color-on-surface-variant:      #49454F;
+  --md-sys-color-surface:                 #FFFFFF;
+  --md-sys-color-on-surface:              #0F172A;
+  --md-sys-color-on-surface-variant:      #475569;
 
   --md-sys-color-surface-container-lowest:#FFFFFF;
-  --md-sys-color-surface-container-low:   #E7E0EC;
-  --md-sys-color-surface-container:       #F3EDF7;
-  --md-sys-color-surface-container-high:  #ECE6F0;
-  --md-sys-color-surface-container-highest:#E6E0E9;
+  --md-sys-color-surface-container-low:   #F1F5F9;
+  --md-sys-color-surface-container:       #FFFFFF;
+  --md-sys-color-surface-container-high:  #F8FAFC;
+  --md-sys-color-surface-container-highest:#E2E8F0;
 
-  --md-sys-color-primary:                 #6750A4;
+  --md-sys-color-primary:                 #0284C7;
   --md-sys-color-on-primary:              #FFFFFF;
-  --md-sys-color-primary-container:       #EADDFF;
-  --md-sys-color-on-primary-container:    #21005D;
+  --md-sys-color-primary-container:       #E0F2FE;
+  --md-sys-color-on-primary-container:    #0369A1;
 
-  --md-sys-color-secondary:               #625B71;
+  --md-sys-color-secondary:               #0D9488;
   --md-sys-color-on-secondary:             #FFFFFF;
-  --md-sys-color-secondary-container:     #E8DEF8;
-  --md-sys-color-on-secondary-container:  #1D192B;
+  --md-sys-color-secondary-container:     #CCFBF1;
+  --md-sys-color-on-secondary-container:  #115E59;
 
-  --md-sys-color-tertiary:                #7D5260;
+  --md-sys-color-tertiary:                #6366F1;
   --md-sys-color-on-tertiary:             #FFFFFF;
-  --md-sys-color-tertiary-container:      #FFD8E4;
-  --md-sys-color-on-tertiary-container:   #31111D;
+  --md-sys-color-tertiary-container:      #EEF2FF;
+  --md-sys-color-on-tertiary-container:   #3730A3;
 
-  --md-sys-color-outline:                 #79747E;
-  --md-sys-color-outline-variant:         #CAC4D0;
+  --md-sys-color-outline:                 #CBD5E1;
+  --md-sys-color-outline-variant:         #E2E8F0;
 
-  --md-sys-color-error:                   #B3261E;
+  --md-sys-color-error:                   #EF4444;
   --md-sys-color-on-error:                #FFFFFF;
-  --md-sys-color-error-container:         #F9DEDC;
-  --md-sys-color-on-error-container:      #410E0B;
+  --md-sys-color-error-container:         #FEE2E2;
+  --md-sys-color-on-error-container:      #991B1B;
 
-  --md-sys-color-success:                 #2e7d32;
-  --md-sys-color-success-container:       #d1e7dd;
+  --md-sys-color-success:                 #10B981;
+  --md-sys-color-success-container:       #D1FAE5;
 
   /* Aliases for easy adoption */
   --bg:           var(--md-sys-color-background);
-  --bg-sidebar:   var(--md-sys-color-surface-container);
-  --bg-card:      var(--md-sys-color-surface-container);
-  --bg-card-2:    var(--md-sys-color-surface-container-low);
-  --bg-hover:     rgba(103, 80, 164, 0.08);
-  --border:       rgba(121, 116, 126, 0.25);
+  --bg-sidebar:   #FFFFFF;
+  --bg-card:      #FFFFFF;
+  --bg-card-2:    #F8FAFC;
+  --bg-hover:     rgba(2, 132, 199, 0.06);
+  --border:       #E2E8F0;
   --border-active:var(--md-sys-color-primary);
 
-  --cyan:         var(--md-sys-color-primary);
-  --cyan-dim:     var(--md-sys-color-secondary-container);
-  --cyan-border:  rgba(103, 80, 164, 0.3);
+  --cyan:         #0284C7;
+  --cyan-dim:     #E0F2FE;
+  --cyan-border:  rgba(2, 132, 199, 0.25);
 
-  --indigo:       var(--md-sys-color-tertiary);
-  --purple:       var(--md-sys-color-primary);
-  --emerald:      var(--md-sys-color-success);
-  --amber:        #d97706;
-  --rose:         var(--md-sys-color-error);
+  --indigo:       #6366F1;
+  --purple:       #0284C7;
+  --emerald:      #10B981;
+  --amber:        #D97706;
+  --rose:         #EF4444;
 
   --text-1:       var(--md-sys-color-on-surface);
   --text-2:       var(--md-sys-color-on-surface-variant);
-  --text-3:       #6E6975;
+  --text-3:       #64748B;
 
   /* MD3 Typography */
   --font-ui:      'Roboto', sans-serif;
@@ -75,9 +75,9 @@
   --r-xs:         8px;
   --r-sm:         12px;
   --r-md:         16px;
-  --r-lg:         24px;
-  --r-xl:         28px;
-  --r-2xl:        48px;
+  --r-lg:         20px;
+  --r-xl:         24px;
+  --r-2xl:        32px;
   --r-full:       9999px;
 
   /* Legacy radii aliases */
@@ -91,50 +91,50 @@
   --topbar-h:     64px;
 
   /* MD3 Elevation Shadows */
-  --shadow-elevation-1: 0px 1px 3px 1px rgba(0, 0, 0, 0.08), 0px 1px 2px 0px rgba(0, 0, 0, 0.12);
-  --shadow-elevation-2: 0px 2px 6px 2px rgba(0, 0, 0, 0.08), 0px 1px 2px 0px rgba(0, 0, 0, 0.12);
-  --shadow-elevation-3: 0px 4px 8px 3px rgba(0, 0, 0, 0.08), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
-  --shadow-elevation-4: 0px 6px 10px 4px rgba(0, 0, 0, 0.08), 0px 2px 4px 0px rgba(0, 0, 0, 0.12);
+  --shadow-elevation-1: 0 1px 3px 0 rgba(15, 23, 42, 0.06), 0 1px 2px -1px rgba(15, 23, 42, 0.06);
+  --shadow-elevation-2: 0 4px 6px -1px rgba(15, 23, 42, 0.07), 0 2px 4px -2px rgba(15, 23, 42, 0.07);
+  --shadow-elevation-3: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.08);
+  --shadow-elevation-4: 0 20px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.08);
 
   /* Signature Motion Easing */
   --md-motion-easing: cubic-bezier(0.2, 0, 0, 1);
-  --md-motion-duration: 300ms;
+  --md-motion-duration: 250ms;
 }
 
 /* ─── Material You (MD3) Dark Theme ───────────────────────────────────────── */
 [data-theme="dark"] {
-  --md-seed:                    #D0BCFF;
+  --md-seed:                    #38BDF8;
 
-  --md-sys-color-background:              #0D0B14;
-  --md-sys-color-on-background:          #F3EEF6;
+  --md-sys-color-background:              #0B1120;
+  --md-sys-color-on-background:          #F8FAFC;
 
-  --md-sys-color-surface:                 #0D0B14;
-  --md-sys-color-on-surface:              #F3EEF6;
-  --md-sys-color-on-surface-variant:      #C8C1D0;
+  --md-sys-color-surface:                 #0F172A;
+  --md-sys-color-on-surface:              #F8FAFC;
+  --md-sys-color-on-surface-variant:      #94A3B8;
 
-  --md-sys-color-surface-container-lowest:#08060D;
-  --md-sys-color-surface-container-low:   #14111E;
-  --md-sys-color-surface-container:       #1B1728;
-  --md-sys-color-surface-container-high:  #241F35;
-  --md-sys-color-surface-container-highest:#2F2945;
+  --md-sys-color-surface-container-lowest:#070B14;
+  --md-sys-color-surface-container-low:   #0F172A;
+  --md-sys-color-surface-container:       #1E293B;
+  --md-sys-color-surface-container-high:  #334155;
+  --md-sys-color-surface-container-highest:#475569;
 
-  --md-sys-color-primary:                 #D8B4FE;
-  --md-sys-color-on-primary:              #260E4F;
-  --md-sys-color-primary-container:       #4A2B82;
-  --md-sys-color-on-primary-container:    #F3E8FF;
+  --md-sys-color-primary:                 #38BDF8;
+  --md-sys-color-on-primary:              #082F49;
+  --md-sys-color-primary-container:       #0369A1;
+  --md-sys-color-on-primary-container:    #E0F2FE;
 
-  --md-sys-color-secondary:               #DDD6FE;
-  --md-sys-color-on-secondary:             #251E3D;
-  --md-sys-color-secondary-container:     #3B325A;
-  --md-sys-color-on-secondary-container:  #EDE9FE;
+  --md-sys-color-secondary:               #2DD4BF;
+  --md-sys-color-on-secondary:             #042F2E;
+  --md-sys-color-secondary-container:     #115E59;
+  --md-sys-color-on-secondary-container:  #CCFBF1;
 
-  --md-sys-color-tertiary:                #F472B6;
-  --md-sys-color-on-tertiary:             #4A042A;
-  --md-sys-color-tertiary-container:      #701A49;
-  --md-sys-color-on-tertiary-container:   #FCE7F3;
+  --md-sys-color-tertiary:                #818CF8;
+  --md-sys-color-on-tertiary:             #1E1B4B;
+  --md-sys-color-tertiary-container:      #3730A3;
+  --md-sys-color-on-tertiary-container:   #EEF2FF;
 
-  --md-sys-color-outline:                 #6B637B;
-  --md-sys-color-outline-variant:         #3C354E;
+  --md-sys-color-outline:                 #475569;
+  --md-sys-color-outline-variant:         #334155;
 
   --md-sys-color-error:                   #F87171;
   --md-sys-color-on-error:                #450A0A;
@@ -145,9 +145,9 @@
   --md-sys-color-success-container:       #064E3B;
 
   --bg:           var(--md-sys-color-background);
-  --bg-sidebar:   var(--md-sys-color-surface-container);
-  --bg-card:      var(--md-sys-color-surface-container);
-  --bg-card-2:    var(--md-sys-color-surface-container-low);
+  --bg-sidebar:   #0F172A;
+  --bg-card:      #1E293B;
+  --bg-card-2:    #0F172A;
   --bg-hover:     rgba(216, 180, 254, 0.12);
   --border:       rgba(216, 180, 254, 0.14);
   --border-active:var(--md-sys-color-primary);
@@ -834,7 +834,8 @@ hr { border: none; border-top: 1px solid var(--border); }
 }
 
 /* ─── Modern Mobile & Phone UI System ──────────────────────────────────── */
-.mobile-header {
+.mobile-header,
+.mobile-topbar {
   display: none;
 }
 
@@ -902,7 +903,8 @@ hr { border: none; border-top: 1px solid var(--border); }
   }
 
   /* Glassmorphic Mobile Top Header */
-  .mobile-header {
+  .mobile-header,
+  .mobile-topbar {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -1125,6 +1127,21 @@ hr { border: none; border-top: 1px solid var(--border); }
     right: 12px;
     padding: 16px;
     gap: 12px;
+  }
+}
+
+/* ─── Floating Assistant & Voice Agent Responsive Placement ─── */
+.floating-assistant-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 999;
+}
+
+@media (max-width: 768px) {
+  .floating-assistant-container {
+    bottom: 84px !important;
+    right: 16px !important;
   }
 }
 

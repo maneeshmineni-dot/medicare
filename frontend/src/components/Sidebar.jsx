@@ -5,7 +5,8 @@ import { useLanguage } from '../context/LanguageContext';
 import { ThemeToggle } from './ThemeToggle';
 import { LanguageSelector } from './LanguageSelector';
 import {
-  LayoutDashboard, Camera, History, User, LogOut, Pill, FileText, Package, Bot, Brain, Flower2, Users
+  LayoutDashboard, Camera, History, User, LogOut, Pill, FileText, Package,
+  Bot, Brain, Flower2, Users, Stethoscope, Sparkles
 } from 'lucide-react';
 
 export const Sidebar = () => {
@@ -13,17 +14,40 @@ export const Sidebar = () => {
   const { t } = useLanguage();
   const navigate = useNavigate();
 
-  const NAV_ITEMS = [
-    { to: '/dashboard',          icon: LayoutDashboard, label: t('home') },
-    { to: '/assistant',          icon: Bot,             label: t('assistant') || 'Assistant' },
-    { to: '/scanner',            icon: Camera,          label: t('scanner') },
-    { to: '/report-analyzer',    icon: FileText,        label: t('reportsRx') },
-    { to: '/cabinet',            icon: Package,         label: t('cabinet') },
-    { to: '/memory-assistance',  icon: Brain,           label: t('memoryCare') || 'Memory Care' },
-    { to: '/voice-therapy',      icon: Flower2,         label: t('voiceTherapy') || 'Voice Therapy' },
-    { to: '/caregiver',          icon: Users,           label: t('caregiver') || 'Caregiver' },
-    { to: '/history',            icon: History,         label: t('history') },
-    { to: '/profile',            icon: User,            label: t('profile') },
+  const NAV_SECTIONS = [
+    {
+      title: t('sectionClinical') || 'Clinical & Diagnostics',
+      items: [
+        { to: '/dashboard',       icon: LayoutDashboard, label: t('home') },
+        { to: '/scanner',         icon: Camera,          label: t('scanner') },
+        { to: '/report-analyzer', icon: FileText,        label: t('reportsRx') },
+        { to: '/cabinet',         icon: Package,         label: t('cabinet') }
+      ]
+    },
+    {
+      title: t('sectionCognitive') || 'Cognitive & Vitality',
+      items: [
+        { to: '/memory-assistance', icon: Brain,   label: t('memoryCare') || 'Memory Care' },
+        { to: '/voice-therapy',     icon: Flower2, label: t('voiceTherapy') || 'Voice Room' },
+        { to: '/caregiver',         icon: Users,   label: t('caregiver') || 'Caregiver Hub' }
+      ]
+    },
+    {
+      title: t('sectionSupport') || 'AI Guidance & Records',
+      items: [
+        { to: '/assistant', icon: Bot,     label: t('assistant') || 'AI Assistant', badge: 'AI' },
+        { to: '/history',   icon: History, label: t('history') || 'History' },
+        { to: '/profile',   icon: User,    label: t('profile') || 'Profile' }
+      ]
+    }
+  ];
+
+  const MOBILE_NAV_ITEMS = [
+    { to: '/dashboard',         icon: LayoutDashboard, label: t('home') },
+    { to: '/scanner',           icon: Camera,          label: t('scanner') },
+    { to: '/cabinet',           icon: Package,         label: t('cabinet') },
+    { to: '/memory-assistance', icon: Brain,           label: t('memoryCare') || 'Memory' },
+    { to: '/assistant',         icon: Bot,             label: t('assistant') || 'AI' }
   ];
 
   const handleLogout = () => {
@@ -40,9 +64,9 @@ export const Sidebar = () => {
       {/* DESKTOP SIDEBAR NAVIGATION */}
       <aside className="sidebar desktop-sidebar">
         {/* Brand */}
-        <div className="sidebar-brand">
+        <div className="sidebar-brand" onClick={() => navigate('/dashboard')} style={{ cursor: 'pointer' }}>
           <div className="sidebar-logo">
-            <Pill size={18} color="#fff" />
+            <Pill size={20} strokeWidth={2.2} color="#fff" />
           </div>
           <div className="sidebar-brand-text">
             <h2>{t('appName')}</h2>
@@ -50,18 +74,36 @@ export const Sidebar = () => {
           </div>
         </div>
 
-        {/* Navigation */}
+        {/* Grouped Navigation */}
         <nav className="sidebar-nav">
-          <div className="nav-section-label">{t('menu')}</div>
-          {NAV_ITEMS.map(({ to, icon: Icon, label }) => (
-            <NavLink
-              key={to}
-              to={to}
-              className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}
-            >
-              <span className="nav-icon"><Icon size={16} /></span>
-              {label}
-            </NavLink>
+          {NAV_SECTIONS.map((section, idx) => (
+            <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <div className="nav-section-label" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <span>{section.title}</span>
+              </div>
+              {section.items.map(({ to, icon: Icon, label, badge }) => (
+                <NavLink
+                  key={to}
+                  to={to}
+                  className={({ isActive }) => `nav-link${isActive ? ' active' : ''}`}
+                >
+                  <span className="nav-icon"><Icon size={18} strokeWidth={2} /></span>
+                  <span style={{ flex: 1 }}>{label}</span>
+                  {badge && (
+                    <span style={{
+                      fontSize: '0.65rem',
+                      fontWeight: 800,
+                      padding: '2px 6px',
+                      borderRadius: '999px',
+                      background: 'var(--md-sys-color-primary-container)',
+                      color: 'var(--md-sys-color-on-primary-container)'
+                    }}>
+                      {badge}
+                    </span>
+                  )}
+                </NavLink>
+              ))}
+            </div>
           ))}
         </nav>
 
@@ -71,47 +113,62 @@ export const Sidebar = () => {
             <div className="sidebar-user">
               <div className="user-avatar">{initials}</div>
               <div className="user-info-text">
-                <div className="name">{user.name}</div>
-                <div className="email">{user.email}</div>
+                <h4>{user.name || 'User'}</h4>
+                <p>{user.email || ''}</p>
               </div>
             </div>
           )}
           
-          <div style={{ display: 'flex', gap: '8px', alignItems: 'center', justifyContent: 'space-between' }}>
-            <LanguageSelector direction="up" align="left" style={{ flex: 1 }} />
-            <ThemeToggle style={{ padding: '8px' }} />
+          {/* Language Selector + Theme Switcher inline row */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
+            <div style={{ flex: 1 }}>
+              <LanguageSelector />
+            </div>
+            <ThemeToggle />
           </div>
 
-          <button className="nav-link" onClick={handleLogout} style={{ color: 'var(--md-sys-color-error)', width: '100%' }}>
-            <span className="nav-icon"><LogOut size={16} /></span>
-            {t('logout')}
-          </button>
+          {user && (
+            <button
+              onClick={handleLogout}
+              className="btn-ghost"
+              style={{
+                width: '100%',
+                justifyContent: 'flex-start',
+                color: 'var(--md-sys-color-error)',
+                padding: '8px 12px',
+                borderRadius: 'var(--r-md)',
+                fontSize: '0.85rem',
+                gap: '8px'
+              }}
+            >
+              <LogOut size={16} strokeWidth={2} />
+              <span>{t('logout')}</span>
+            </button>
+          )}
         </div>
       </aside>
 
-      {/* MOBILE TOP HEADER BAR */}
-      <header className="mobile-header">
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }} onClick={() => navigate('/dashboard')} role="button">
-          <div className="sidebar-logo" style={{ width: '32px', height: '32px', borderRadius: '10px', boxShadow: '0 2px 8px rgba(103, 80, 164, 0.4)' }}>
-            <Pill size={15} color="#fff" />
+      {/* MOBILE TOPBAR */}
+      <header className="mobile-topbar">
+        <div className="sidebar-brand" onClick={() => navigate('/dashboard')}>
+          <div className="sidebar-logo">
+            <Pill size={16} strokeWidth={2.2} color="#fff" />
           </div>
-          <div>
-            <h2 style={{ fontSize: '0.95rem', fontWeight: 800, color: 'var(--md-sys-color-on-surface)', margin: 0, letterSpacing: '-0.02em' }}>
-              {t('appName')}
-            </h2>
+          <div className="sidebar-brand-text">
+            <h2>{t('appName')}</h2>
           </div>
         </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-          <LanguageSelector direction="down" align="right" style={{ fontSize: '0.75rem' }} />
-          <ThemeToggle compact={true} style={{ padding: '8px', minHeight: 'unset', width: '34px', height: '34px', justifyContent: 'center' }} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <LanguageSelector compact />
+          <ThemeToggle />
           {user && (
             <div
               onClick={() => navigate('/profile')}
               style={{
-                width: '34px',
-                height: '34px',
-                borderRadius: 'var(--r-full)',
+                width: '32px',
+                height: '32px',
+                borderRadius: '50%',
                 background: 'var(--md-sys-color-primary-container)',
                 color: 'var(--md-sys-color-on-primary-container)',
                 display: 'flex',
@@ -132,13 +189,13 @@ export const Sidebar = () => {
 
       {/* MOBILE BOTTOM FLOATING NAVIGATION BAR */}
       <nav className="mobile-bottom-nav">
-        {NAV_ITEMS.slice(0, 5).map(({ to, icon: Icon, label }) => (
+        {MOBILE_NAV_ITEMS.map(({ to, icon: Icon, label }) => (
           <NavLink
             key={to}
             to={to}
             className={({ isActive }) => `mobile-nav-item${isActive ? ' active' : ''}`}
           >
-            <Icon size={20} />
+            <Icon size={20} strokeWidth={2} />
             <span>{label}</span>
           </NavLink>
         ))}

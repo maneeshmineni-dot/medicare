@@ -39,7 +39,7 @@ export const MemoryAssistancePage = () => {
             marginBottom: '14px',
             textTransform: 'uppercase'
           }}>
-            <Brain size={16} /> Smriti-Setu Cognitive Health Suite
+            <Brain size={16} /> PharmaVision Cognitive Care Suite
           </div>
           <h1 style={{ fontSize: '2.1rem', fontWeight: 900, color: 'var(--md-sys-color-on-surface)', margin: '0 0 10px', letterSpacing: '-0.02em' }}>
             {t('memoryCareTitle')}

@@ -11,12 +11,10 @@ const ScanHistory = require('../models/ScanHistory');
 const NcbiService = require('../services/ncbiService');
 const FdaService = require('../services/fdaService');
 const PharmacokineticsService = require('../services/pharmacokineticsService');
-
-const LANGUAGE_INSTRUCTIONS = {
-  en: 'Respond in clear, professional English.',
-  hi: 'आप सभी स्पष्टीकरणों, प्राथमिक उपयोग, खुराक, चेतावनियों और दुष्प्रभावों के मानों को स्पष्ट हिंदी (Hindi) में प्रदान करें।',
-  te: 'మీరు అన్ని వివరణలు, ప్రాథమిక ఉపయోగాలు, మోతాదు, హెచ్చరికలు మరియు దుష్ప్రభావాల విలువలను స్పష్టమైన తెలుగు (Telugu) లో అందించండి.'
-};
+const {
+  getVisionLangInstruction,
+  getLanguageDisplayName
+} = require('../utils/languageUtils');
 
 const BASE_SYSTEM_PROMPT = `
 You are PharmaVision AI, a high-precision medical packaging computer vision assistant.
@@ -73,8 +71,9 @@ async function analyzeMedicine(req, res, next) {
     let analysisResult = null;
     let lastError = null;
 
-    const langInstruction = LANGUAGE_INSTRUCTIONS[targetLanguage] || LANGUAGE_INSTRUCTIONS['en'];
-    const DYNAMIC_SYSTEM_PROMPT = `${BASE_SYSTEM_PROMPT}\nLANGUAGE REQUIREMENT: ${langInstruction}\nImportant: Translate all text field values in the JSON (primaryUse, mechanismOfAction, detailedIndications, dosageInstructions, warnings, sideEffects, storageInstructions) into ${targetLanguage === 'hi' ? 'Hindi (हिंदी)' : targetLanguage === 'te' ? 'Telugu (తెలుగు)' : 'English'}. Keep medicationName recognizable.`;
+    const langInstruction = getVisionLangInstruction(targetLanguage);
+    const targetLangDisplay = getLanguageDisplayName(targetLanguage);
+    const DYNAMIC_SYSTEM_PROMPT = `${BASE_SYSTEM_PROMPT}\nLANGUAGE REQUIREMENT: ${langInstruction}\nImportant: Translate all text field values in the JSON (primaryUse, mechanismOfAction, detailedIndications, dosageInstructions, warnings, sideEffects, storageInstructions) into ${targetLangDisplay}. Keep medicationName recognizable.`;
 
     // 1. Try OpenAI Vision API if configured
     if (OpenAI && openaiApiKey && openaiApiKey.trim() !== '') {
@@ -212,7 +211,8 @@ async function chatWithMedicineAI(req, res, next) {
     const geminiApiKey = process.env.GEMINI_API_KEY;
     let aiResponse = '';
 
-    const langInstruction = LANGUAGE_INSTRUCTIONS[targetLanguage] || LANGUAGE_INSTRUCTIONS['en'];
+    const langInstruction = getAssistantLangInstruction(targetLanguage);
+    const targetLangDisplay = getLanguageDisplayName(targetLanguage);
 
     const contextName = medicineContext?.medicationName || 'the scanned medication';
     const contextUse = medicineContext?.primaryUse || '';
@@ -222,7 +222,7 @@ async function chatWithMedicineAI(req, res, next) {
 
     const prompt = `SYSTEM INSTRUCTION: You are PharmaVision AI, a medical pharmacology assistant answering questions about the patient's scanned medication: "${contextName}".
 
-LANGUAGE REQUIREMENT: ${langInstruction} (Respond to the user in ${targetLanguage === 'hi' ? 'Hindi (हिंदी)' : targetLanguage === 'te' ? 'Telugu (తెలుగు)' : 'English'}).
+LANGUAGE REQUIREMENT: ${langInstruction} (Respond to the user in ${targetLangDisplay}).
 
 CONSTRAINTS:
 1. You MUST ONLY answer questions directly relevant to "${contextName}" (its usage, dosage: ${contextDosage}, active ingredients: ${activeIngStr}, warnings: ${contextWarnings}, side effects).
@@ -261,16 +261,21 @@ Patient Question: "${message}"`;
       }
     }
 
-    // 3. Fallback Response
+    // 3. Multilingual Fallback Response
     if (!aiResponse) {
-      await new Promise((resolve) => setTimeout(resolve, 600));
-      if (targetLanguage === 'hi') {
-        aiResponse = `आपकी दवा ${contextName} के संबंध में: ${contextUse ? contextUse + '. ' : ''}खुराक: ${contextDosage || 'लेबल देखें'}। यदि आपका कोई विशिष्ट प्रश्न है तो कृपया पूछें।`;
-      } else if (targetLanguage === 'te') {
-        aiResponse = `మీ మందు ${contextName} గురించి: ${contextUse ? contextUse + '. ' : ''}మోతాదు: ${contextDosage || 'లేబుల్ చూడండి'}. దయచేసి ఏదైనా నిర్దిష్ట ప్రశ్న ఉంటే అడగండి.`;
-      } else {
-        aiResponse = `Regarding your scanned medication ${contextName}: ${contextUse ? contextUse + '. ' : ''}Dosage advice: ${contextDosage || 'Refer to package label'}. Please ask any specific question about taking this drug safely.`;
-      }
+      await new Promise((resolve) => setTimeout(resolve, 300));
+      const fallbacks = {
+        hi: `आपकी दवा ${contextName} के संबंध में: ${contextUse ? contextUse + '. ' : ''}खुराक: ${contextDosage || 'लेबल देखें'}। यदि आपका कोई विशिष्ट प्रश्न है तो कृपया पूछें।`,
+        te: `మీ మందు ${contextName} గురించి: ${contextUse ? contextUse + '. ' : ''}మోతాదు: ${contextDosage || 'లేబుల్ చూడండి'}. దయచేసి ఏదైనా నిర్దిష్ట ప్రశ్న ఉంటే అడగండి.`,
+        ta: `உங்கள் மருந்து ${contextName} பற்றி: ${contextUse ? contextUse + '. ' : ''}அளவு: ${contextDosage || 'லேபிளைப் பார்க்கவும்'}. தயவுசெய்து உங்கள் கேள்வியைக் கேளுங்கள்.`,
+        kn: `ನಿಮ್ಮ ಔಷಧ ${contextName} ಕುರಿತು: ${contextUse ? contextUse + '. ' : ''}ಡೋಸ್: ${contextDosage || 'ಲೇಬಲ್ ನೋಡಿ'}. ದಯವಿಟ್ಟು ನಿಮ್ಮ ಪ್ರಶ್ನೆಯನ್ನು ಕೇಳಿ.`,
+        bn: `আপনার ওষুধ ${contextName} সম্পর্কিত: ${contextUse ? contextUse + '. ' : ''}ডোজ: ${contextDosage || 'লেবেল দেখুন'}। আপনার প্রশ্ন জিজ্ঞাসা করুন।`,
+        mr: `तुमच्या ${contextName} औषधाबद्दल: ${contextUse ? contextUse + '. ' : ''}डोस: ${contextDosage || 'लेबल पहा'}. कृपया तुमचा प्रश्न विचारा.`,
+        es: `Respecto a su medicamento ${contextName}: ${contextUse ? contextUse + '. ' : ''}Dosis: ${contextDosage || 'Consulte la etiqueta'}. Haga cualquier consulta específica.`,
+        en: `Regarding your scanned medication ${contextName}: ${contextUse ? contextUse + '. ' : ''}Dosage advice: ${contextDosage || 'Refer to package label'}. Please ask any specific question about taking this drug safely.`
+      };
+      const cleanLang = (targetLanguage || 'en').toLowerCase().slice(0, 2);
+      aiResponse = fallbacks[cleanLang] || fallbacks.en;
     }
 
     return res.json({

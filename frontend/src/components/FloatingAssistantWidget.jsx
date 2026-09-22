@@ -107,7 +107,7 @@ export const FloatingAssistantWidget = () => {
   }
 
   return (
-    <div className="floating-assistant-container" style={{ position: 'fixed', bottom: '24px', right: '24px', zIndex: 999 }}>
+    <div className="floating-assistant-container">
       {/* Floating Trigger Button */}
       {!isOpen && (
         <button

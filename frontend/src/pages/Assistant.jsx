@@ -2,9 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useAssistant } from '../context/AssistantContext';
+import { FormattedMarkdown } from '../components/FormattedMarkdown';
 import {
   Bot, Send, Mic, MicOff, Volume2, Square, Sparkles, ShieldAlert,
-  Pill, HeartPulse, Download, Copy, Check, Info, AlertTriangle, Trash2
+  Pill, HeartPulse, Download, Copy, Check, Info, AlertTriangle, Trash2,
+  Search, Clock, ShieldCheck, Utensils, HelpCircle
 } from 'lucide-react';
 
 export const Assistant = () => {
@@ -120,7 +122,7 @@ export const Assistant = () => {
   const handleExport = () => {
     if (messages.length === 0) return;
 
-    let transcript = `# PharmaVision AI — Patient Clinical Consultation Transcript\n`;
+    let transcript = `# PharmaVision AI - Patient Clinical Consultation Transcript\n`;
     transcript += `Patient: ${user?.name || 'User'} (${user?.email || 'N/A'})\n`;
     transcript += `Date: ${new Date().toLocaleString()}\n`;
     transcript += `Allergen Profile: ${patientProfile.allergies?.join(', ') || 'None recorded'}\n`;
@@ -146,11 +148,11 @@ export const Assistant = () => {
   };
 
   const quickPrompts = [
-    { text: t('promptInteractions'), icon: '🔍' },
-    { text: t('promptSchedule'), icon: '⏰' },
-    { text: t('promptAllergies'), icon: '🛡️' },
-    { text: t('promptFoods'), icon: '🍏' },
-    { text: t('promptMissedDose'), icon: '❓' }
+    { text: t('promptInteractions'), icon: Search },
+    { text: t('promptSchedule'), icon: Clock },
+    { text: t('promptAllergies'), icon: ShieldCheck },
+    { text: t('promptFoods'), icon: Utensils },
+    { text: t('promptMissedDose'), icon: HelpCircle }
   ];
 
   return (
@@ -232,21 +234,23 @@ export const Assistant = () => {
               {lang === 'hi'
                 ? `मैं आपके कैबिनेट की सभी दवाओं (${cabinetMeds.length} दर्ज), एलर्जी और स्वास्थ्य स्थितियों को ध्यान में रखकर उत्तर देता हूँ।`
                 : lang === 'te'
-                ? `మీ క్యాబినెట్ మందులు (${cabinetMeds.length} నమోదు), అలెర్జీలు మరియు ఆరోగ్య పరిస్థితుల ఆధారంగా నేను సమాధానాలు ఇస్తాను.`
+                ? `మీ క్యాबినెట్ మందులు (${cabinetMeds.length} నమోదు), అలెర్జీలు మరియు ఆరోగ్య పరిస్థితుల ఆధారంగా నేను సమాధానాలు ఇస్తాను.`
                 : `I have real-time clinical context over your ${cabinetMeds.length} cabinet medicines, active allergens, and chronic conditions.`}
             </p>
 
             <div className="quick-prompts-container">
               <div className="quick-prompts-title">{t('quickPromptsTitle')}</div>
               <div className="quick-prompts-grid">
-                {quickPrompts.map((prompt, index) => (
+                {quickPrompts.map(({ text, icon: IconComponent }, index) => (
                   <button
                     key={index}
                     className="quick-prompt-pill"
-                    onClick={() => handleSendMessage(prompt.text)}
+                    onClick={() => handleSendMessage(text)}
                   >
-                    <span className="prompt-icon">{prompt.icon}</span>
-                    <span className="prompt-text">{prompt.text}</span>
+                    <span className="prompt-icon" style={{ display: 'flex', alignItems: 'center' }}>
+                      <IconComponent size={16} strokeWidth={2} color="var(--md-sys-color-primary)" />
+                    </span>
+                    <span className="prompt-text">{text}</span>
                   </button>
                 ))}
               </div>
@@ -276,7 +280,7 @@ export const Assistant = () => {
 
                     {/* Content text */}
                     <div className="message-content-text">
-                      {msg.content}
+                      <FormattedMarkdown content={msg.content} />
                     </div>
 
                     {/* Patient Context Indicators */}

@@ -1,6 +1,10 @@
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const { generateWithFailover } = require('../services/geminiKeyManager');
 const ScanHistory = require('../models/ScanHistory');
+const {
+  getPrescriptionLangInstruction,
+  getLanguageDisplayName
+} = require('../utils/languageUtils');
 
 const PRESCRIPTION_SYSTEM_PROMPT = `
 You are PharmaVision AI's Senior Clinical Pharmacologist and Prescription Digitization Specialist.
@@ -81,13 +85,11 @@ async function analyzePrescription(req, res, next) {
       try {
         const filePart = { inlineData: { data: base64Data, mimeType: cleanMimeType } };
         
-        const langPrompt = targetLanguage === 'hi'
-          ? 'Please provide all text values (summary, primaryUse, mechanismOfAction, warnings, sideEffects, instructions) in Hindi (हिंदी). Keep medicationName recognizable.'
-          : targetLanguage === 'te'
-          ? 'Please provide all text values (summary, primaryUse, mechanismOfAction, warnings, sideEffects, instructions) in Telugu (తెలుగు). Keep medicationName recognizable.'
-          : 'Respond in clear, professional English.';
+        const langInstruction = getPrescriptionLangInstruction(targetLanguage);
+        const targetLangDisplay = getLanguageDisplayName(targetLanguage);
+        const langPrompt = `Please provide all text values (summary, primaryUse, mechanismOfAction, warnings, sideEffects, instructions) in ${targetLangDisplay}. Keep medicationName recognizable.`;
 
-        const prompt = `${PRESCRIPTION_SYSTEM_PROMPT}\nLANGUAGE REQUIREMENT: ${langPrompt}`;
+        const prompt = `${PRESCRIPTION_SYSTEM_PROMPT}\nLANGUAGE REQUIREMENT: ${langInstruction}\n${langPrompt}`;
 
         const response = await generateWithFailover({
           prompt,

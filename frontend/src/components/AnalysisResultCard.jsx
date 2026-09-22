@@ -237,7 +237,7 @@ export const AnalysisResultCard = ({ result, loading }) => {
               )}
               {result.sideEffects.serious && result.sideEffects.serious.length > 0 && (
                 <div>
-                  <p style={{ fontSize: '0.75rem', color: 'var(--md-sys-color-error)', marginBottom: '6px', fontWeight: 700 }}>SERIOUS REACTIONS — CONSULT PHYSICIAN</p>
+                  <p style={{ fontSize: '0.75rem', color: 'var(--md-sys-color-error)', marginBottom: '6px', fontWeight: 700 }}>SERIOUS REACTIONS: CONSULT PHYSICIAN</p>
                   <BulletList items={result.sideEffects.serious} color="var(--md-sys-color-error)" />
                 </div>
               )}

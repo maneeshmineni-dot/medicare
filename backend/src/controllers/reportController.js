@@ -7,6 +7,10 @@ try {
   OpenAI = null;
 }
 const ScanHistory = require('../models/ScanHistory');
+const {
+  getReportLangInstruction,
+  getLanguageDisplayName
+} = require('../utils/languageUtils');
 
 const REPORT_SYSTEM_PROMPT = `
 You are PharmaVision AI's Senior Clinical Diagnostic & Lab Report Specialist.
@@ -71,7 +75,9 @@ async function analyzeReport(req, res, next) {
     if (geminiApiKey && geminiApiKey !== 'your_gemini_api_key_here') {
       try {
         const filePart = { inlineData: { data: base64Data, mimeType: cleanMimeType } };
-        const prompt = `${REPORT_SYSTEM_PROMPT}\nPlease analyze this lab report and return the JSON object in ${targetLanguage === 'hi' ? 'Hindi (हिंदी)' : targetLanguage === 'te' ? 'Telugu (తెలుగు)' : 'English'}.`;
+        const langInstruction = getReportLangInstruction(targetLanguage);
+        const targetLangDisplay = getLanguageDisplayName(targetLanguage);
+        const prompt = `${REPORT_SYSTEM_PROMPT}\nLANGUAGE REQUIREMENT: ${langInstruction}\nPlease analyze this lab report and return the JSON object with all text fields in ${targetLangDisplay}.`;
 
         const response = await generateWithFailover({
           prompt,
